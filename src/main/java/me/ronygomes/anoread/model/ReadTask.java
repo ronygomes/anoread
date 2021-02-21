@@ -1,13 +1,13 @@
 package me.ronygomes.anoread.model;
 
 import me.ronygomes.anoread.converter.InputConverter;
-import me.ronygomes.anoread.formatter.ErrorPromptFormatter;
 import me.ronygomes.anoread.extractor.InputExtractor;
+import me.ronygomes.anoread.formatter.ErrorPromptFormatter;
 import me.ronygomes.anoread.formatter.ReadPromptFormatter;
 import me.ronygomes.anoread.handler.ReadHandler;
 import me.ronygomes.anoread.util.function.QuadFunction;
 
-import java.io.InputStream;
+import java.io.BufferedReader;
 import java.io.PrintStream;
 import java.io.Serializable;
 import java.util.function.Consumer;
@@ -17,8 +17,8 @@ public class ReadTask<T> implements Serializable {
     private Class<T> type;
     private ReadMeta meta;
 
-    private QuadFunction<InputStream, PrintStream, PrintStream, ReadMeta, Boolean> before;
-    private QuadFunction<InputStream, PrintStream, PrintStream, ReadMeta, Boolean> after;
+    private QuadFunction<BufferedReader, PrintStream, PrintStream, ReadMeta, Boolean> before;
+    private QuadFunction<BufferedReader, PrintStream, PrintStream, ReadMeta, Boolean> after;
 
     private ReadHandler handler;
     private ReadPromptFormatter readPromptFormatter;
@@ -46,19 +46,19 @@ public class ReadTask<T> implements Serializable {
         this.meta = meta;
     }
 
-    public QuadFunction<InputStream, PrintStream, PrintStream, ReadMeta, Boolean> getBefore() {
+    public QuadFunction<BufferedReader, PrintStream, PrintStream, ReadMeta, Boolean> getBefore() {
         return before;
     }
 
-    public void setBefore(QuadFunction<InputStream, PrintStream, PrintStream, ReadMeta, Boolean> before) {
+    public void setBefore(QuadFunction<BufferedReader, PrintStream, PrintStream, ReadMeta, Boolean> before) {
         this.before = before;
     }
 
-    public QuadFunction<InputStream, PrintStream, PrintStream, ReadMeta, Boolean> getAfter() {
+    public QuadFunction<BufferedReader, PrintStream, PrintStream, ReadMeta, Boolean> getAfter() {
         return after;
     }
 
-    public void setAfter(QuadFunction<InputStream, PrintStream, PrintStream, ReadMeta, Boolean> after) {
+    public void setAfter(QuadFunction<BufferedReader, PrintStream, PrintStream, ReadMeta, Boolean> after) {
         this.after = after;
     }
 

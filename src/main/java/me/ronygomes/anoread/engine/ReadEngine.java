@@ -3,8 +3,8 @@ package me.ronygomes.anoread.engine;
 import me.ronygomes.anoread.model.ReadEngineCmd;
 import me.ronygomes.anoread.model.ReadTask;
 
-import java.io.InputStream;
-import java.io.PrintStream;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 public class ReadEngine {
 
@@ -24,8 +24,10 @@ public class ReadEngine {
         this.err = out;
     }
 
-    public void execute(ReadEngineCmd cmd) {
-        cmd.getBeginConsumer().accept(in, out, err);
+    public void execute(ReadEngineCmd cmd) throws IOException {
+
+        BufferedReader bin = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
+        cmd.getBeginConsumer().accept(bin, out, err);
 
         String line;
         String[] parts;
@@ -34,18 +36,19 @@ public class ReadEngine {
         for (ReadTask<?> task : cmd.getTasks()) {
 
             // return false to skip task
-            if (!task.getBefore().apply(in, out, err, task.getMeta())) {
+            if (!task.getBefore().apply(bin, out, err, task.getMeta())) {
                 continue;
             }
 
             while (true) {
                 out.print(task.getReadPromptFormatter().format(task.getMeta()));
 
-                line = task.getHandler().read(in, out, err);
+                line = task.getHandler().read(bin, out, err);
                 parts = task.getExtractor().extract(line);
 
                 input = task.getConverter().convert(parts);
 
+                // TODO: Create a validator Function<Object, Boolean>
                 if (task.isValid(input)) {
                     task.getAssigner().accept(input);
                     break;
@@ -54,9 +57,10 @@ public class ReadEngine {
                 err.print(task.getErrorPromptFormatter().format(task.getMeta(), parts));
             }
 
-            task.getAfter().apply(in, out, err, task.getMeta());
+            task.getAfter().apply(bin, out, err, task.getMeta());
         }
 
-        cmd.getEndConsumer().accept(in, out, err);
+        cmd.getEndConsumer().accept(bin, out, err);
+        bin.close();
     }
 }

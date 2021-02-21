@@ -1,10 +1,11 @@
 package me.ronygomes.anoread.handler;
 
-import java.io.InputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.PrintStream;
 
 public interface ReadHandler {
 
-    String read(InputStream in, PrintStream out, PrintStream err);
+    String read(BufferedReader in, PrintStream out, PrintStream err) throws IOException;
 
 }
