@@ -5,6 +5,7 @@ import me.ronygomes.anoread.extractor.InputExtractor;
 import me.ronygomes.anoread.formatter.ErrorPromptFormatter;
 import me.ronygomes.anoread.formatter.ReadPromptFormatter;
 import me.ronygomes.anoread.handler.ReadHandler;
+import me.ronygomes.anoread.util.function.QuadConsumer;
 import me.ronygomes.anoread.util.function.QuadFunction;
 
 import java.io.BufferedReader;
@@ -18,7 +19,7 @@ public class ReadTask<T> implements Serializable {
     private ReadMeta meta;
 
     private QuadFunction<BufferedReader, PrintStream, PrintStream, ReadMeta, Boolean> before;
-    private QuadFunction<BufferedReader, PrintStream, PrintStream, ReadMeta, Boolean> after;
+    private QuadConsumer<BufferedReader, PrintStream, PrintStream, ReadMeta> after;
 
     private ReadHandler handler;
     private ReadPromptFormatter readPromptFormatter;
@@ -54,11 +55,11 @@ public class ReadTask<T> implements Serializable {
         this.before = before;
     }
 
-    public QuadFunction<BufferedReader, PrintStream, PrintStream, ReadMeta, Boolean> getAfter() {
+    public QuadConsumer<BufferedReader, PrintStream, PrintStream, ReadMeta> getAfter() {
         return after;
     }
 
-    public void setAfter(QuadFunction<BufferedReader, PrintStream, PrintStream, ReadMeta, Boolean> after) {
+    public void setAfter(QuadConsumer<BufferedReader, PrintStream, PrintStream, ReadMeta> after) {
         this.after = after;
     }
 

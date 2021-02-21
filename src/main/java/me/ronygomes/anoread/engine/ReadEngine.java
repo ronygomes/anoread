@@ -57,7 +57,7 @@ public class ReadEngine {
                 err.print(task.getErrorPromptFormatter().format(task.getMeta(), parts));
             }
 
-            task.getAfter().apply(bin, out, err, task.getMeta());
+            task.getAfter().accept(bin, out, err, task.getMeta());
         }
 
         cmd.getEndConsumer().accept(bin, out, err);
