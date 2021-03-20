@@ -8,7 +8,7 @@ import me.ronygomes.anoread.handler.ReadHandler;
 import me.ronygomes.anoread.util.function.QuadConsumer;
 import me.ronygomes.anoread.util.function.QuadFunction;
 
-import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.Serializable;
 import java.util.function.Consumer;
@@ -18,8 +18,8 @@ public class ReadTask<T> implements Serializable {
     private Class<T> type;
     private ReadMeta meta;
 
-    private QuadFunction<BufferedReader, PrintStream, PrintStream, ReadMeta, Boolean> before;
-    private QuadConsumer<BufferedReader, PrintStream, PrintStream, ReadMeta> after;
+    private QuadFunction<InputStream, PrintStream, PrintStream, ReadMeta, Boolean> before;
+    private QuadConsumer<InputStream, PrintStream, PrintStream, ReadMeta> after;
 
     private ReadHandler handler;
     private ReadPromptFormatter readPromptFormatter;
@@ -47,19 +47,19 @@ public class ReadTask<T> implements Serializable {
         this.meta = meta;
     }
 
-    public QuadFunction<BufferedReader, PrintStream, PrintStream, ReadMeta, Boolean> getBefore() {
+    public QuadFunction<InputStream, PrintStream, PrintStream, ReadMeta, Boolean> getBefore() {
         return before;
     }
 
-    public void setBefore(QuadFunction<BufferedReader, PrintStream, PrintStream, ReadMeta, Boolean> before) {
+    public void setBefore(QuadFunction<InputStream, PrintStream, PrintStream, ReadMeta, Boolean> before) {
         this.before = before;
     }
 
-    public QuadConsumer<BufferedReader, PrintStream, PrintStream, ReadMeta> getAfter() {
+    public QuadConsumer<InputStream, PrintStream, PrintStream, ReadMeta> getAfter() {
         return after;
     }
 
-    public void setAfter(QuadConsumer<BufferedReader, PrintStream, PrintStream, ReadMeta> after) {
+    public void setAfter(QuadConsumer<InputStream, PrintStream, PrintStream, ReadMeta> after) {
         this.after = after;
     }
 

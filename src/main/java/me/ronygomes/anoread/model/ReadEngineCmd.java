@@ -2,19 +2,19 @@ package me.ronygomes.anoread.model;
 
 import me.ronygomes.anoread.util.function.TriConsumer;
 
-import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.Serializable;
 import java.util.List;
 
 public class ReadEngineCmd implements Serializable {
 
-    private TriConsumer<BufferedReader, PrintStream, PrintStream> beginConsumer;
-    private TriConsumer<BufferedReader, PrintStream, PrintStream> endConsumer;
+    private TriConsumer<InputStream, PrintStream, PrintStream> beginConsumer;
+    private TriConsumer<InputStream, PrintStream, PrintStream> endConsumer;
     private List<ReadTask<?>> tasks;
 
-    public ReadEngineCmd(TriConsumer<BufferedReader, PrintStream, PrintStream> beginConsumer,
-                         TriConsumer<BufferedReader, PrintStream, PrintStream> endConsumer,
+    public ReadEngineCmd(TriConsumer<InputStream, PrintStream, PrintStream> beginConsumer,
+                         TriConsumer<InputStream, PrintStream, PrintStream> endConsumer,
                          List<ReadTask<?>> tasks) {
 
         this.beginConsumer = beginConsumer;
@@ -22,19 +22,19 @@ public class ReadEngineCmd implements Serializable {
         this.tasks = tasks;
     }
 
-    public TriConsumer<BufferedReader, PrintStream, PrintStream> getBeginConsumer() {
+    public TriConsumer<InputStream, PrintStream, PrintStream> getBeginConsumer() {
         return beginConsumer;
     }
 
-    public void setBeginConsumer(TriConsumer<BufferedReader, PrintStream, PrintStream> beginConsumer) {
+    public void setBeginConsumer(TriConsumer<InputStream, PrintStream, PrintStream> beginConsumer) {
         this.beginConsumer = beginConsumer;
     }
 
-    public TriConsumer<BufferedReader, PrintStream, PrintStream> getEndConsumer() {
+    public TriConsumer<InputStream, PrintStream, PrintStream> getEndConsumer() {
         return endConsumer;
     }
 
-    public void setEndConsumer(TriConsumer<BufferedReader, PrintStream, PrintStream> endConsumer) {
+    public void setEndConsumer(TriConsumer<InputStream, PrintStream, PrintStream> endConsumer) {
         this.endConsumer = endConsumer;
     }
 

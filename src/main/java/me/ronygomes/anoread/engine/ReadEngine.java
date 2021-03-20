@@ -3,8 +3,9 @@ package me.ronygomes.anoread.engine;
 import me.ronygomes.anoread.model.ReadEngineCmd;
 import me.ronygomes.anoread.model.ReadTask;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
 
 public class ReadEngine {
 
@@ -24,10 +25,15 @@ public class ReadEngine {
         this.err = out;
     }
 
+    public ReadEngine(InputStream in, PrintStream out, PrintStream err) {
+        this.in = in;
+        this.out = out;
+        this.err = err;
+    }
+
     public void execute(ReadEngineCmd cmd) throws IOException {
 
-        BufferedReader bin = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-        cmd.getBeginConsumer().accept(bin, out, err);
+        cmd.getBeginConsumer().accept(in, out, err);
 
         String line;
         String[] parts;
@@ -36,14 +42,14 @@ public class ReadEngine {
         for (ReadTask<?> task : cmd.getTasks()) {
 
             // return false to skip task
-            if (!task.getBefore().apply(bin, out, err, task.getMeta())) {
+            if (!task.getBefore().apply(in, out, err, task.getMeta())) {
                 continue;
             }
 
             while (true) {
                 out.print(task.getReadPromptFormatter().format(task.getMeta()));
 
-                line = task.getHandler().read(bin, out, err);
+                line = task.getHandler().read(in, out, err);
                 parts = task.getExtractor().extract(line);
 
                 input = task.getConverter().convert(parts);
@@ -57,10 +63,10 @@ public class ReadEngine {
                 err.print(task.getErrorPromptFormatter().format(task.getMeta(), parts));
             }
 
-            task.getAfter().accept(bin, out, err, task.getMeta());
+            task.getAfter().accept(in, out, err, task.getMeta());
         }
 
-        cmd.getEndConsumer().accept(bin, out, err);
-        bin.close();
+        cmd.getEndConsumer().accept(in, out, err);
+        in.close();
     }
 }

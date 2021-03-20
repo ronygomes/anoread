@@ -2,12 +2,14 @@ package me.ronygomes.anoread.handler.impl;
 
 import me.ronygomes.anoread.handler.ReadHandler;
 
-import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static me.ronygomes.anoread.handler.ReadHandler.readLine;
 
 public class FixedLineReadHandler implements ReadHandler {
 
@@ -24,7 +26,7 @@ public class FixedLineReadHandler implements ReadHandler {
     }
 
     @Override
-    public String read(BufferedReader in, PrintStream out, PrintStream err) throws IOException {
+    public String read(InputStream in, PrintStream out, PrintStream err) throws IOException {
         List<String> lines = new ArrayList<>();
 
         err.println();
@@ -33,7 +35,7 @@ public class FixedLineReadHandler implements ReadHandler {
                 err.printf(PROMPT_LINE, i + 1, lineCount);
             }
 
-            lines.add(in.readLine());
+            lines.add(readLine(in));
         }
 
         return lines.stream().collect(Collectors.joining(joiner));
