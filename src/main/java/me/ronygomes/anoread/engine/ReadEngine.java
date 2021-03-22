@@ -33,6 +33,10 @@ public class ReadEngine {
 
     public void execute(ReadEngineCmd cmd) throws IOException {
 
+        if (cmd.getTasks().isEmpty()) {
+            return;
+        }
+
         cmd.getBeginConsumer().accept(in, out, err);
 
         String line;
@@ -67,6 +71,5 @@ public class ReadEngine {
         }
 
         cmd.getEndConsumer().accept(in, out, err);
-        in.close();
     }
 }
