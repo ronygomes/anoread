@@ -8,6 +8,12 @@ public class ReadMeta implements Serializable {
     private String prompt;
     private String hint;
 
+    public ReadMeta(String name, String prompt, String hint) {
+        this.name = name;
+        this.prompt = prompt;
+        this.hint = hint;
+    }
+
     public String getName() {
         return name;
     }
