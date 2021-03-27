@@ -25,7 +25,7 @@ public class BasicReadPromptFormatterTest {
     @Test
     public void testVisibleHintWithFullLinePrompt() {
         ReadPromptFormatter rpf = new BasicReadPromptFormatter(true, true);
-        assertEquals("rmPrompt (rmHint):\n", rpf.format(meta));
+        assertEquals("rmPrompt (rmHint): \n", rpf.format(meta));
     }
 
     @Test
