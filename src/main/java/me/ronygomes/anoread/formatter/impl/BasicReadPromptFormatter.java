@@ -55,7 +55,7 @@ public class BasicReadPromptFormatter implements ReadPromptFormatter {
         }
 
         prompt.append(promptSuffix);
-        prompt.append(fullLinePrompt ? "\n" : "");
+        prompt.append(fullLinePrompt ? System.lineSeparator() : "");
 
         return prompt.toString();
     }
