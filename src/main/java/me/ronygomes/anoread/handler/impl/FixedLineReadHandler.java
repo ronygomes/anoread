@@ -10,10 +10,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static me.ronygomes.anoread.handler.ReadHandler.readLine;
+import static me.ronygomes.anoread.handler.ReadHandler.toUtf8String;
 
 public class FixedLineReadHandler implements ReadHandler {
 
-    private static final String PROMPT_LINE = "(%d / %d) > ";
+    private static final String PROMPT_LINE = "(%d/%d)> ";
 
     private int lineCount;
     private String joiner;
@@ -35,7 +36,7 @@ public class FixedLineReadHandler implements ReadHandler {
                 err.printf(PROMPT_LINE, i + 1, lineCount);
             }
 
-            lines.add(readLine(in));
+            lines.add(toUtf8String(readLine(in, System.lineSeparator())));
         }
 
         return lines.stream().collect(Collectors.joining(joiner));

@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static me.ronygomes.anoread.handler.ReadHandler.readLine;
+import static me.ronygomes.anoread.handler.ReadHandler.toUtf8String;
 
 public class MultiLineReadHandler implements ReadHandler {
 
@@ -25,12 +26,12 @@ public class MultiLineReadHandler implements ReadHandler {
     public String read(InputStream in, PrintStream out, PrintStream err) throws IOException {
         List<String> lines = new ArrayList<>();
 
-        String line = readLine(in);
+        String line = toUtf8String(readLine(in, System.lineSeparator()));
         while (!line.trim().equals("")) {
             lines.add(line);
 
             err.print(PROMPT_LINE);
-            line = readLine(in);
+            line = toUtf8String(readLine(in, System.lineSeparator()));
         }
 
         return lines.stream().collect(Collectors.joining(joiner));
