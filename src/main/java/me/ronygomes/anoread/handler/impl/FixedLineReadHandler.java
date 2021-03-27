@@ -19,18 +19,23 @@ public class FixedLineReadHandler implements ReadHandler {
     private int lineCount;
     private String joiner;
     private boolean showPromptLine;
+    private boolean startInNewLine;
 
-    public FixedLineReadHandler(int lineCount, String joiner, boolean showPromptLine) {
+    public FixedLineReadHandler(int lineCount, String joiner, boolean showPromptLine, boolean startInNewLine) {
         this.lineCount = lineCount;
         this.joiner = joiner;
         this.showPromptLine = showPromptLine;
+        this.startInNewLine = startInNewLine;
     }
 
     @Override
     public String read(InputStream in, PrintStream out, PrintStream err) throws IOException {
         List<String> lines = new ArrayList<>();
 
-        err.println();
+        if (startInNewLine) {
+            err.println();
+        }
+
         for (int i = 0; i < lineCount; i++) {
             if (showPromptLine) {
                 err.printf(PROMPT_LINE, i + 1, lineCount);
