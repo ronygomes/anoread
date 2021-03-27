@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class SingleInputExtractorTest {
 
+    private static final String INPUT0 = null;
     private static final String INPUT1 = "";
     private static final String INPUT2 = " data ";
     private static final String INPUT3 = "data ";
@@ -17,7 +18,7 @@ public class SingleInputExtractorTest {
     void testSingleLineExtractor() {
         InputExtractor ie = new SingleInputExtractor();
 
-        assertThrows(NullPointerException.class, () -> ie.extract(null));
+        assertThrows(NullPointerException.class, () -> ie.extract(INPUT0));
         assertArrayEquals(new String[]{""}, ie.extract(INPUT1));
         assertArrayEquals(new String[]{"data"}, ie.extract(INPUT2));
         assertArrayEquals(new String[]{"data"}, ie.extract(INPUT3));
@@ -28,7 +29,7 @@ public class SingleInputExtractorTest {
     void testSingleLineExtractorWithoutTrim() {
         InputExtractor ie = new SingleInputExtractor(false);
 
-        assertThrows(NullPointerException.class, () -> ie.extract(null));
+        assertThrows(NullPointerException.class, () -> ie.extract(INPUT0));
         assertArrayEquals(new String[]{""}, ie.extract(INPUT1));
         assertArrayEquals(new String[]{" data "}, ie.extract(INPUT2));
         assertArrayEquals(new String[]{"data "}, ie.extract(INPUT3));
