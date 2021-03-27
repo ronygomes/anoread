@@ -1,5 +1,6 @@
 package me.ronygomes.anoread.engine;
 
+import me.ronygomes.anoread.exception.AnoReadException;
 import me.ronygomes.anoread.model.ReadEngineCmd;
 import me.ronygomes.anoread.model.ReadTask;
 
@@ -40,31 +41,35 @@ public class ReadEngine {
         cmd.getBeginConsumer().accept(in, out, err);
 
         String line;
-        String[] parts;
+        String[] parts = null;
         Object input;
+        boolean doContinue;
 
         for (ReadTask<?> task : cmd.getTasks()) {
 
-            // return false to skip task
-            if (!task.getBefore().apply(in, out, err, task.getMeta())) {
+            boolean processThisTask = task.getBefore().apply(in, out, err, task.getMeta());
+            if (!processThisTask) {
                 continue;
             }
 
-            while (true) {
+            doContinue = true;
+            while (doContinue) {
                 out.print(task.getReadPromptFormatter().format(task.getMeta()));
 
                 line = task.getHandler().read(in, out, err);
-                parts = task.getExtractor().extract(line);
 
-                input = task.getConverter().convert(parts);
+                try {
+                    parts = task.getExtractor().extract(line);
 
-                // TODO: Create a validator Function<Object, Boolean>
-                if (task.isValid(input)) {
+                    input = task.getConverter().convert(parts);
+
+                    task.validate(input);
                     task.getAssigner().accept(input);
-                    break;
-                }
 
-                err.print(task.getErrorPromptFormatter().format(task.getMeta(), parts));
+                    doContinue = false;
+                } catch (AnoReadException e) {
+                    err.print(task.getErrorPromptFormatter().format(task.getMeta(), parts, e));
+                }
             }
 
             task.getAfter().accept(in, out, err, task.getMeta());

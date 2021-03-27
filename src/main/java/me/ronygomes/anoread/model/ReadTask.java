@@ -111,7 +111,6 @@ public class ReadTask<T> implements Serializable {
         this.errorPromptFormatter = errorPromptFormatter;
     }
 
-    public boolean isValid(Object value) {
-        return true;
+    public void validate(Object value) {
     }
 }

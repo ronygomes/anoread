@@ -1,6 +1,10 @@
 package me.ronygomes.anoread.engine;
 
 import me.ronygomes.anoread.converter.InputConverter;
+import me.ronygomes.anoread.exception.AnoReadException;
+import me.ronygomes.anoread.exception.ConversionException;
+import me.ronygomes.anoread.exception.ExtractionException;
+import me.ronygomes.anoread.exception.ValidationError;
 import me.ronygomes.anoread.extractor.InputExtractor;
 import me.ronygomes.anoread.formatter.ErrorPromptFormatter;
 import me.ronygomes.anoread.formatter.ReadPromptFormatter;
@@ -117,7 +121,6 @@ public class ReadEngineTest {
 
         stubReadTaskCommonMethods();
         when(before.apply(any(), any(), any(), any())).thenReturn(true);
-        when(readTask.isValid(any())).thenReturn(true);
         when(readPromptFormatter.format(any())).thenReturn(DUMMY_READ_PROMPT_TEXT);
 
         ReadEngine engine = new ReadEngine();
@@ -131,7 +134,7 @@ public class ReadEngineTest {
         verify(extractor, times(1)).extract(any());
         verify(converter, times(1)).convert(any());
         verify(assigner, times(1)).accept(any());
-        verify(errorPromptFormatter, times(0)).format(any(), any());
+        verify(errorPromptFormatter, times(0)).format(any(), any(), any());
 
         verify(after, times(1)).accept(System.in, System.out, System.err, null);
         verify(endConsumer, times(1)).accept(System.in, System.out, System.err);
@@ -144,7 +147,6 @@ public class ReadEngineTest {
 
         stubReadTaskCommonMethods();
         when(before.apply(any(), any(), any(), any())).thenReturn(true);
-        when(readTask.isValid(any())).thenReturn(true);
         when(readPromptFormatter.format(any())).thenReturn(DUMMY_READ_PROMPT_TEXT);
 
         ReadEngine engine = new ReadEngine(in, out);
@@ -158,7 +160,7 @@ public class ReadEngineTest {
         verify(extractor, times(1)).extract(any());
         verify(converter, times(1)).convert(any());
         verify(assigner, times(1)).accept(any());
-        verify(errorPromptFormatter, times(0)).format(any(), any());
+        verify(errorPromptFormatter, times(0)).format(any(), any(), any());
 
         verify(after, times(1)).accept(in, out, out, null);
         verify(endConsumer, times(1)).accept(in, out, out);
@@ -189,7 +191,6 @@ public class ReadEngineTest {
 
         stubReadTaskCommonMethods();
         when(before.apply(in, out, err, null)).thenReturn(true);
-        when(readTask.isValid(any())).thenReturn(true);
         when(readPromptFormatter.format(any())).thenReturn(DUMMY_READ_PROMPT_TEXT);
 
         ReadEngine engine = new ReadEngine(in, out, err);
@@ -203,7 +204,7 @@ public class ReadEngineTest {
         verify(extractor, times(1)).extract(any());
         verify(converter, times(1)).convert(any());
         verify(assigner, times(1)).accept(any());
-        verify(errorPromptFormatter, times(0)).format(any(), any());
+        verify(errorPromptFormatter, times(0)).format(any(), any(), any());
 
         verify(after, times(1)).accept(in, out, err, null);
         verify(endConsumer, times(1)).accept(in, out, err);
@@ -213,18 +214,20 @@ public class ReadEngineTest {
     }
 
     @Test
-    public void testEngineWithSingleInvalidThenValidTask() throws IOException {
+    public void testEngineWithValidationError() throws IOException {
 
         stubEngineCmdConsumers();
         when(engineCmd.getTasks()).thenReturn(tasks);
 
         stubReadTaskCommonMethods();
-        when(readTask.isValid(any())).thenReturn(false, true);
+
+        AnoReadException e = new ValidationError();
+        doThrow(e).doNothing().when(readTask).validate(any());
         when(readTask.getErrorPromptFormatter()).thenReturn(errorPromptFormatter);
 
         when(before.apply(in, out, err, null)).thenReturn(true);
         when(readPromptFormatter.format(any())).thenReturn(DUMMY_READ_PROMPT_TEXT);
-        when(errorPromptFormatter.format(any(), any())).thenReturn(DUMMY_ERROR_PROMPT_TEXT);
+        when(errorPromptFormatter.format(any(), any(), any())).thenReturn(DUMMY_ERROR_PROMPT_TEXT);
 
         ReadEngine engine = new ReadEngine(in, out, err);
         engine.execute(engineCmd);
@@ -237,8 +240,82 @@ public class ReadEngineTest {
         verify(extractor, times(2)).extract(any());
         verify(converter, times(2)).convert(any());
         verify(assigner, times(1)).accept(any());
-        verify(readTask, times(2)).isValid(any());
-        verify(errorPromptFormatter, times(1)).format(any(), any());
+        verify(readTask, times(2)).validate(any());
+        verify(errorPromptFormatter, times(1)).format(any(), any(), eq(e));
+
+        verify(after, times(1)).accept(in, out, err, null);
+        verify(endConsumer, times(1)).accept(in, out, err);
+
+        assertArrayEquals((DUMMY_READ_PROMPT_TEXT + DUMMY_READ_PROMPT_TEXT).getBytes(UTF_8), baosOut.toByteArray());
+        assertArrayEquals(DUMMY_ERROR_PROMPT_TEXT.getBytes(UTF_8), baosErr.toByteArray());
+    }
+
+    @Test
+    public void testEngineWithExtractorException() throws IOException {
+
+        stubEngineCmdConsumers();
+        when(engineCmd.getTasks()).thenReturn(tasks);
+
+        stubReadTaskCommonMethods();
+
+        AnoReadException e = new ExtractionException();
+        when(extractor.extract(any())).thenThrow(e).thenReturn(null);
+        when(readTask.getErrorPromptFormatter()).thenReturn(errorPromptFormatter);
+
+        when(before.apply(in, out, err, null)).thenReturn(true);
+        when(readPromptFormatter.format(any())).thenReturn(DUMMY_READ_PROMPT_TEXT);
+        when(errorPromptFormatter.format(any(), any(), any())).thenReturn(DUMMY_ERROR_PROMPT_TEXT);
+
+        ReadEngine engine = new ReadEngine(in, out, err);
+        engine.execute(engineCmd);
+
+        verify(beginConsumer, times(1)).accept(in, out, err);
+        verify(before, times(1)).apply(in, out, err, null);
+
+        verify(readPromptFormatter, times(2)).format(any());
+        verify(handler, times(2)).read(in, out, err);
+        verify(extractor, times(2)).extract(any());
+        verify(converter, times(1)).convert(any());
+        verify(assigner, times(1)).accept(any());
+        verify(readTask, times(1)).validate(any());
+        verify(errorPromptFormatter, times(1)).format(any(), any(), any());
+
+        verify(after, times(1)).accept(in, out, err, null);
+        verify(endConsumer, times(1)).accept(in, out, err);
+
+        assertArrayEquals((DUMMY_READ_PROMPT_TEXT + DUMMY_READ_PROMPT_TEXT).getBytes(UTF_8), baosOut.toByteArray());
+        assertArrayEquals(DUMMY_ERROR_PROMPT_TEXT.getBytes(UTF_8), baosErr.toByteArray());
+    }
+
+    @Test
+    public void testEngineWithConversionException() throws IOException {
+
+        stubEngineCmdConsumers();
+        when(engineCmd.getTasks()).thenReturn(tasks);
+
+        stubReadTaskCommonMethods();
+
+        AnoReadException e = new ConversionException();
+        when(converter.convert(any())).thenThrow(e).thenReturn(null);
+        when(readTask.getErrorPromptFormatter()).thenReturn(errorPromptFormatter);
+
+        when(before.apply(in, out, err, null)).thenReturn(true);
+        when(readPromptFormatter.format(any())).thenReturn(DUMMY_READ_PROMPT_TEXT);
+        when(errorPromptFormatter.format(any(), any(), any())).thenReturn(DUMMY_ERROR_PROMPT_TEXT);
+
+        ReadEngine engine = new ReadEngine(in, out, err);
+        engine.execute(engineCmd);
+
+        verify(beginConsumer, times(1)).accept(in, out, err);
+        verify(before, times(1)).apply(in, out, err, null);
+
+        verify(readPromptFormatter, times(2)).format(any());
+        verify(handler, times(2)).read(in, out, err);
+        verify(extractor, times(2)).extract(any());
+        verify(converter, times(2)).convert(any());
+        verify(assigner, times(1)).accept(any());
+        verify(readTask, times(1)).validate(any());
+        verify(errorPromptFormatter, times(1)).format(any(), any(), any());
 
         verify(after, times(1)).accept(in, out, err, null);
         verify(endConsumer, times(1)).accept(in, out, err);
