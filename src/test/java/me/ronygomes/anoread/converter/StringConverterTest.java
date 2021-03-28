@@ -1,10 +1,10 @@
 package me.ronygomes.anoread.converter;
 
 import me.ronygomes.anoread.converter.impl.StringConverter;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class StringConverterTest {
 
@@ -19,8 +19,8 @@ public class StringConverterTest {
 
         InputConverter<String> ic = new StringConverter();
 
-        Assertions.assertThrows(IllegalStateException.class, () -> ic.convert(INPUT0));
-        Assertions.assertThrows(IllegalStateException.class, () -> ic.convert(INPUT1));
+        assertThrows(IllegalStateException.class, () -> ic.convert(INPUT0));
+        assertThrows(IllegalStateException.class, () -> ic.convert(INPUT1));
 
         assertEquals("", ic.convert(INPUT2));
         assertEquals(" ", ic.convert(INPUT3));

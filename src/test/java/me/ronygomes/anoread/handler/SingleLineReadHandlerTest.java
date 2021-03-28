@@ -43,8 +43,8 @@ public class SingleLineReadHandlerTest {
         ReadHandler rh = new SingleLineReadHandler();
         assertEquals("", rh.read(in, out, err));
 
-        assertArrayEquals(baosOut.toByteArray(), new byte[0]);
-        assertArrayEquals(baosErr.toByteArray(), new byte[0]);
+        assertArrayEquals(new byte[0], baosOut.toByteArray());
+        assertArrayEquals(new byte[0], baosErr.toByteArray());
     }
 
     @Test
@@ -56,8 +56,8 @@ public class SingleLineReadHandlerTest {
         assertEquals("line2", rh.read(in, out, err));
         assertEquals("line3", rh.read(in, out, err));
 
-        assertArrayEquals(baosOut.toByteArray(), new byte[0]);
-        assertArrayEquals(baosErr.toByteArray(), new byte[0]);
+        assertArrayEquals(new byte[0], baosOut.toByteArray());
+        assertArrayEquals(new byte[0], baosErr.toByteArray());
     }
 
     @Test
@@ -67,8 +67,8 @@ public class SingleLineReadHandlerTest {
         ReadHandler rh = new SingleLineReadHandler();
         assertEquals("line1", rh.read(in, out, err));
 
-        assertArrayEquals(baosOut.toByteArray(), new byte[0]);
-        assertArrayEquals(baosErr.toByteArray(), new byte[0]);
+        assertArrayEquals(new byte[0], baosOut.toByteArray());
+        assertArrayEquals(new byte[0], baosErr.toByteArray());
     }
 
     @Test
@@ -78,8 +78,8 @@ public class SingleLineReadHandlerTest {
         ReadHandler rh = new SingleLineReadHandler();
         assertEquals("line1", rh.read(in, out, err));
 
-        assertArrayEquals(baosOut.toByteArray(), new byte[0]);
-        assertArrayEquals(baosErr.toByteArray(), new byte[0]);
+        assertArrayEquals(new byte[0], baosOut.toByteArray());
+        assertArrayEquals(new byte[0], baosErr.toByteArray());
     }
 
     private InputStream toInputStream(String input) {

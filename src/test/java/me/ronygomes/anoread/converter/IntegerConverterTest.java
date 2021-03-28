@@ -2,10 +2,10 @@ package me.ronygomes.anoread.converter;
 
 import me.ronygomes.anoread.converter.impl.IntegerConverter;
 import me.ronygomes.anoread.exception.ConversionException;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class IntegerConverterTest {
 
@@ -24,26 +24,26 @@ public class IntegerConverterTest {
     void testIntegerConverter() {
         InputConverter<Integer> ic = new IntegerConverter();
 
-        Assertions.assertThrows(IllegalStateException.class, () -> ic.convert(INPUT0));
-        Assertions.assertThrows(IllegalStateException.class, () -> ic.convert(INPUT1));
+        assertThrows(IllegalStateException.class, () -> ic.convert(INPUT0));
+        assertThrows(IllegalStateException.class, () -> ic.convert(INPUT1));
 
-        ConversionException ce2 = Assertions.assertThrows(ConversionException.class, () -> ic.convert(INPUT2));
+        ConversionException ce2 = assertThrows(ConversionException.class, () -> ic.convert(INPUT2));
         assertEquals("Invalid java.lang.Integer: ", ce2.getDisplayMessage());
 
-        ConversionException ce3 = Assertions.assertThrows(ConversionException.class, () -> ic.convert(INPUT3));
+        ConversionException ce3 = assertThrows(ConversionException.class, () -> ic.convert(INPUT3));
         assertEquals("Invalid java.lang.Integer:  ", ce3.getDisplayMessage());
 
-        ConversionException ce4 = Assertions.assertThrows(ConversionException.class, () -> ic.convert(INPUT4));
+        ConversionException ce4 = assertThrows(ConversionException.class, () -> ic.convert(INPUT4));
         assertEquals("Invalid java.lang.Integer:  3 ", ce4.getDisplayMessage());
 
         assertEquals(1000, ic.convert(INPUT5));
         assertEquals(-1000, ic.convert(INPUT6));
         assertEquals(0, ic.convert(INPUT7));
 
-        ConversionException ce8 = Assertions.assertThrows(ConversionException.class, () -> ic.convert(INPUT8));
+        ConversionException ce8 = assertThrows(ConversionException.class, () -> ic.convert(INPUT8));
         assertEquals("Invalid java.lang.Integer: 99999999999999999999999999", ce8.getDisplayMessage());
 
-        ConversionException ce9 = Assertions.assertThrows(ConversionException.class, () -> ic.convert(INPUT9));
+        ConversionException ce9 = assertThrows(ConversionException.class, () -> ic.convert(INPUT9));
         assertEquals("Invalid java.lang.Integer: invalid", ce9.getDisplayMessage());
     }
 }

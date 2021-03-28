@@ -209,8 +209,8 @@ public class ReadEngineTest {
         verify(after, times(1)).accept(in, out, err, null);
         verify(endConsumer, times(1)).accept(in, out, err);
 
-        assertArrayEquals(baosOut.toByteArray(), DUMMY_READ_PROMPT_TEXT.getBytes(UTF_8));
-        assertArrayEquals(baosErr.toByteArray(), new byte[0]);
+        assertArrayEquals(DUMMY_READ_PROMPT_TEXT.getBytes(UTF_8), baosOut.toByteArray());
+        assertArrayEquals(new byte[0], baosErr.toByteArray());
     }
 
     @Test

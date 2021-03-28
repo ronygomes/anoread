@@ -44,8 +44,8 @@ public class MultiLineReadHandlerTest {
         ReadHandler rh = new MultiLineReadHandler(TEST_JOINER);
         assertEquals("", rh.read(in, out, err));
 
-        assertArrayEquals(baosOut.toByteArray(), new byte[0]);
-        assertArrayEquals(baosErr.toByteArray(), new byte[0]);
+        assertArrayEquals(new byte[0], baosOut.toByteArray());
+        assertArrayEquals(new byte[0], baosErr.toByteArray());
     }
 
     @Test
@@ -56,7 +56,7 @@ public class MultiLineReadHandlerTest {
 
         assertEquals("line1;line2;line3", rh.read(in, out, err));
 
-        assertArrayEquals(baosOut.toByteArray(), new byte[0]);
+        assertArrayEquals(new byte[0], baosOut.toByteArray());
         assertArrayEquals("> > > ".getBytes(), baosErr.toByteArray());
     }
 
@@ -67,7 +67,7 @@ public class MultiLineReadHandlerTest {
         ReadHandler rh = new MultiLineReadHandler(TEST_JOINER);
         assertEquals("line1", rh.read(in, out, err));
 
-        assertArrayEquals(baosOut.toByteArray(), new byte[0]);
+        assertArrayEquals(new byte[0], baosOut.toByteArray());
         assertArrayEquals("> ".getBytes(), baosErr.toByteArray());
     }
 

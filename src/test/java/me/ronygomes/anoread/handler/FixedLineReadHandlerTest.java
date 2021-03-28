@@ -44,8 +44,8 @@ public class FixedLineReadHandlerTest {
         ReadHandler rh = new FixedLineReadHandler(1, TEST_JOINER, false, false);
         assertEquals("", rh.read(in, out, err));
 
-        assertArrayEquals(baosOut.toByteArray(), new byte[0]);
-        assertArrayEquals(baosErr.toByteArray(), new byte[0]);
+        assertArrayEquals(new byte[0], baosOut.toByteArray());
+        assertArrayEquals(new byte[0], baosErr.toByteArray());
     }
 
     @Test
@@ -56,7 +56,7 @@ public class FixedLineReadHandlerTest {
 
         assertEquals("line1", rh.read(in, out, err));
 
-        assertArrayEquals(baosOut.toByteArray(), new byte[0]);
+        assertArrayEquals(new byte[0], baosOut.toByteArray());
         assertArrayEquals(new byte[0], baosErr.toByteArray());
     }
 
@@ -67,7 +67,7 @@ public class FixedLineReadHandlerTest {
         ReadHandler rh = new FixedLineReadHandler(2, TEST_JOINER, false, false);
         assertEquals("line1;line2", rh.read(in, out, err));
 
-        assertArrayEquals(baosOut.toByteArray(), new byte[0]);
+        assertArrayEquals(new byte[0], baosOut.toByteArray());
         assertArrayEquals(new byte[0], baosErr.toByteArray());
     }
 
@@ -78,7 +78,7 @@ public class FixedLineReadHandlerTest {
         ReadHandler rh = new FixedLineReadHandler(2, TEST_JOINER, true, false);
         assertEquals("line1;line2", rh.read(in, out, err));
 
-        assertArrayEquals(baosOut.toByteArray(), new byte[0]);
+        assertArrayEquals(new byte[0], baosOut.toByteArray());
         assertArrayEquals("(1/2)> (2/2)> ".getBytes(), baosErr.toByteArray());
     }
 
@@ -89,7 +89,7 @@ public class FixedLineReadHandlerTest {
         ReadHandler rh = new FixedLineReadHandler(2, TEST_JOINER, false, true);
         assertEquals("line1;line2", rh.read(in, out, err));
 
-        assertArrayEquals(baosOut.toByteArray(), new byte[0]);
+        assertArrayEquals(new byte[0], baosOut.toByteArray());
         assertArrayEquals(System.lineSeparator().getBytes(), baosErr.toByteArray());
     }
 
@@ -100,7 +100,7 @@ public class FixedLineReadHandlerTest {
         ReadHandler rh = new FixedLineReadHandler(2, TEST_JOINER, true, true);
         assertEquals("line1;line2", rh.read(in, out, err));
 
-        assertArrayEquals(baosOut.toByteArray(), new byte[0]);
+        assertArrayEquals(new byte[0], baosOut.toByteArray());
         assertArrayEquals((System.lineSeparator() + "(1/2)> (2/2)> ").getBytes(), baosErr.toByteArray());
     }
 
