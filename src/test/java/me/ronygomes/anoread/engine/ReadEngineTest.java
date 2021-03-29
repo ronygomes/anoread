@@ -1,14 +1,21 @@
 package me.ronygomes.anoread.engine;
 
 import me.ronygomes.anoread.converter.InputConverter;
+import me.ronygomes.anoread.converter.impl.IntegerConverter;
+import me.ronygomes.anoread.converter.impl.StringConverter;
 import me.ronygomes.anoread.exception.AnoReadException;
 import me.ronygomes.anoread.exception.ConversionException;
 import me.ronygomes.anoread.exception.ExtractionException;
 import me.ronygomes.anoread.exception.ValidationError;
 import me.ronygomes.anoread.extractor.InputExtractor;
+import me.ronygomes.anoread.extractor.impl.SingleInputExtractor;
 import me.ronygomes.anoread.formatter.ErrorPromptFormatter;
 import me.ronygomes.anoread.formatter.ReadPromptFormatter;
+import me.ronygomes.anoread.formatter.impl.BasicErrorPromptFormatter;
+import me.ronygomes.anoread.formatter.impl.BasicReadPromptFormatter;
 import me.ronygomes.anoread.handler.ReadHandler;
+import me.ronygomes.anoread.handler.impl.SingleLineReadHandler;
+import me.ronygomes.anoread.model.Person;
 import me.ronygomes.anoread.model.ReadEngineCmd;
 import me.ronygomes.anoread.model.ReadMeta;
 import me.ronygomes.anoread.model.ReadTask;
@@ -31,6 +38,7 @@ import java.util.function.Consumer;
 import static java.math.BigInteger.TEN;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -322,6 +330,64 @@ public class ReadEngineTest {
 
         assertArrayEquals((DUMMY_READ_PROMPT_TEXT + DUMMY_READ_PROMPT_TEXT).getBytes(UTF_8), baosOut.toByteArray());
         assertArrayEquals(DUMMY_ERROR_PROMPT_TEXT.getBytes(UTF_8), baosErr.toByteArray());
+    }
+
+    @Test
+    public void testCanTakeInputWithReadData() throws IOException {
+        this.in = new ByteArrayInputStream(String.join(System.lineSeparator(), "John", "25").getBytes());
+
+        QuadFunction<InputStream, PrintStream, PrintStream, ReadMeta, Boolean> before = (i, o, e, m) -> {
+            o.print("(");
+            return true;
+        };
+
+        QuadConsumer<InputStream, PrintStream, PrintStream, ReadMeta> after = (i, o, e, m) -> o.print(");");
+
+        ReadHandler rh = new SingleLineReadHandler();
+        ReadPromptFormatter rpf = new BasicReadPromptFormatter(false, false);
+        InputExtractor ie = new SingleInputExtractor(false);
+        ErrorPromptFormatter epf = new BasicErrorPromptFormatter(false);
+
+        Person p = new Person();
+
+        ReadTask<String> nameTask = new ReadTask<>();
+        nameTask.setType(String.class);
+        nameTask.setMeta(new ReadMeta("name", "Enter Name", null));
+        nameTask.setBefore(before);
+        nameTask.setAfter(after);
+        nameTask.setHandler(rh);
+        nameTask.setReadPromptFormatter(rpf);
+        nameTask.setExtractor(ie);
+        nameTask.setConverter(new StringConverter());
+        nameTask.setAssigner(n -> p.setName((String) n));
+        nameTask.setErrorPromptFormatter(epf);
+
+        ReadTask<Integer> ageTask = new ReadTask<>();
+        ageTask.setType(Integer.class);
+        ageTask.setMeta(new ReadMeta("age", "Enter Age", null));
+        ageTask.setBefore(before);
+        ageTask.setAfter(after);
+        ageTask.setHandler(rh);
+        ageTask.setReadPromptFormatter(rpf);
+        ageTask.setExtractor(ie);
+        ageTask.setConverter(new IntegerConverter());
+        ageTask.setAssigner(n -> p.setAge((int) n));
+        ageTask.setErrorPromptFormatter(epf);
+
+        List<ReadTask<?>> tasks = new ArrayList<>();
+        tasks.add(nameTask);
+        tasks.add(ageTask);
+
+        ReadEngineCmd cmd = new ReadEngineCmd((i, o, e) -> o.print("["), (i, o, e) -> o.print("]"), tasks);
+
+        ReadEngine engine = new ReadEngine(in, out, err);
+        engine.execute(cmd);
+
+        assertEquals("John", p.getName());
+        assertEquals(25, p.getAge());
+        assertEquals(0, in.available());
+        assertEquals("[(Enter Name: );(Enter Age: );]", baosOut.toString());
+        assertArrayEquals(new byte[0], baosErr.toByteArray());
     }
 
     private void stubEngineCmdConsumers() {

@@ -30,7 +30,6 @@ public class ReadTask<T> implements Serializable {
     private Consumer<Object> assigner;
     private ErrorPromptFormatter errorPromptFormatter;
 
-
     public Class<T> getType() {
         return type;
     }
