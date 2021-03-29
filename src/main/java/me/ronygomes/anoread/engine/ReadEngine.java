@@ -68,7 +68,7 @@ public class ReadEngine {
 
                     doContinue = false;
                 } catch (AnoReadException e) {
-                    err.print(task.getErrorPromptFormatter().format(task.getMeta(), parts, e));
+                    err.print(task.getErrorPromptFormatter().format(task.getMeta(), line, e));
                 }
             }
 

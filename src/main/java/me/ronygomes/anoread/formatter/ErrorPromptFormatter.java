@@ -5,5 +5,5 @@ import me.ronygomes.anoread.model.ReadMeta;
 
 public interface ErrorPromptFormatter {
 
-    String format(ReadMeta meta, String[] value, AnoReadException e);
+    String format(ReadMeta meta, String input, AnoReadException e);
 }

@@ -19,7 +19,7 @@ public class BasicErrorPromptFormatter implements ErrorPromptFormatter {
     }
 
     @Override
-    public String format(ReadMeta meta, String[] value, AnoReadException e) {
+    public String format(ReadMeta meta, String input, AnoReadException e) {
 
         String typeMessage = "";
         if (showErrorType) {
@@ -34,6 +34,6 @@ public class BasicErrorPromptFormatter implements ErrorPromptFormatter {
             typeMessage += " ";
         }
 
-        return String.format("%s%s - %s", typeMessage, meta.getName(), e.getDisplayMessage());
+        return String.format("%s%s[%s] - %s", typeMessage, meta.getName(), input, e.getDisplayMessage());
     }
 }
