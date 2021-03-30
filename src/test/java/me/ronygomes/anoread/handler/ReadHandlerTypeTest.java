@@ -11,7 +11,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class ReadHandlerTest {
+public class ReadHandlerTypeTest {
 
     @Test
     void testToByteArray() {

@@ -1,6 +1,6 @@
 package me.ronygomes.anoread.handler;
 
-import me.ronygomes.anoread.handler.impl.SingleLineReadHandler;
+import me.ronygomes.anoread.handler.impl.MultiLineReadHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -9,12 +9,13 @@ import java.io.*;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class SingleLineReadHandlerTest {
+public class MultiLineReadHandlerTypeTest {
+
+    private static final String TEST_JOINER = ";";
 
     private static final String INPUT0 = "";
-    private static final String INPUT1 = String.join(System.lineSeparator(), "line1", "line2", "line3");
-    private static final String INPUT2 = String.join(System.lineSeparator(), "line1");
-    private static final String INPUT3 = "line1";
+    private static final String INPUT1 = String.join(System.lineSeparator(), "line1", "line2", "line3", "");
+    private static final String INPUT2 = String.join(System.lineSeparator(), "line1", "");
 
     private InputStream in;
 
@@ -40,7 +41,7 @@ public class SingleLineReadHandlerTest {
     void testCanReadEmptyInput() throws IOException {
         this.in = toInputStream(INPUT0);
 
-        ReadHandler rh = new SingleLineReadHandler();
+        ReadHandler rh = new MultiLineReadHandler(TEST_JOINER);
         assertEquals("", rh.read(in, out, err));
 
         assertArrayEquals(new byte[0], baosOut.toByteArray());
@@ -51,35 +52,23 @@ public class SingleLineReadHandlerTest {
     void testCanReadMultiLineInput() throws IOException {
         this.in = toInputStream(INPUT1);
 
-        ReadHandler rh = new SingleLineReadHandler();
-        assertEquals("line1", rh.read(in, out, err));
-        assertEquals("line2", rh.read(in, out, err));
-        assertEquals("line3", rh.read(in, out, err));
+        ReadHandler rh = new MultiLineReadHandler(TEST_JOINER);
+
+        assertEquals("line1;line2;line3", rh.read(in, out, err));
 
         assertArrayEquals(new byte[0], baosOut.toByteArray());
-        assertArrayEquals(new byte[0], baosErr.toByteArray());
+        assertArrayEquals("> > > ".getBytes(), baosErr.toByteArray());
     }
 
     @Test
     void testCanReadSingleLineInput() throws IOException {
         this.in = toInputStream(INPUT2);
 
-        ReadHandler rh = new SingleLineReadHandler();
+        ReadHandler rh = new MultiLineReadHandler(TEST_JOINER);
         assertEquals("line1", rh.read(in, out, err));
 
         assertArrayEquals(new byte[0], baosOut.toByteArray());
-        assertArrayEquals(new byte[0], baosErr.toByteArray());
-    }
-
-    @Test
-    void testCanReadWithoutLineEnding() throws IOException {
-        this.in = toInputStream(INPUT3);
-
-        ReadHandler rh = new SingleLineReadHandler();
-        assertEquals("line1", rh.read(in, out, err));
-
-        assertArrayEquals(new byte[0], baosOut.toByteArray());
-        assertArrayEquals(new byte[0], baosErr.toByteArray());
+        assertArrayEquals("> ".getBytes(), baosErr.toByteArray());
     }
 
     private InputStream toInputStream(String input) {

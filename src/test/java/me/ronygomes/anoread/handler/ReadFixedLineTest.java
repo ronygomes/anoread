@@ -9,7 +9,7 @@ import java.io.*;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class FixedLineReadHandlerTest {
+public class ReadFixedLineTest {
 
     private static final String TEST_JOINER = ";";
 
