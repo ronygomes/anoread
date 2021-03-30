@@ -10,6 +10,7 @@ import me.ronygomes.anoread.handler.impl.FixedLineReadHandler;
 import me.ronygomes.anoread.handler.impl.MultiLineReadHandler;
 import me.ronygomes.anoread.handler.impl.SingleLineReadHandler;
 import me.ronygomes.anoread.model.AnnotationTestModel;
+import me.ronygomes.anoread.model.ReadMeta;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
@@ -108,5 +109,22 @@ public class AnnotationHelperTest {
         InputConverter<?> c = extractConverter(field0.getDeclaredAnnotations());
         assertNotNull(c);
         assertTrue(c instanceof IntegerConverter);
+    }
+
+    @Test
+    void testReadMetaWhenAbsent() throws NoSuchFieldException {
+        Field field0 = AnnotationTestModel.class.getDeclaredField("field0");
+        assertNull(createMeta(field0));
+    }
+
+    @Test
+    void testReadMetaWhenPresent() throws NoSuchFieldException {
+        Field field6 = AnnotationTestModel.class.getDeclaredField("field6");
+        ReadMeta meta = createMeta(field6);
+
+        assertNotNull(meta);
+        assertEquals("field6", meta.getName());
+        assertEquals("Enter field6: ", meta.getPrompt());
+        assertEquals("eg. Dog, Cat", meta.getHint());
     }
 }
