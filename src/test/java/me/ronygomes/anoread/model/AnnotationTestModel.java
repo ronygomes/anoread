@@ -5,6 +5,8 @@ import me.ronygomes.anoread.annotation.NotImportant;
 import me.ronygomes.anoread.annotation.ReadAttributes;
 import me.ronygomes.anoread.annotation.extractor.ExtractDelimiterSeparatedInput;
 import me.ronygomes.anoread.annotation.extractor.ExtractSingleInput;
+import me.ronygomes.anoread.annotation.formatter.FormatErrorBasic;
+import me.ronygomes.anoread.annotation.formatter.FormatPromptBasic;
 import me.ronygomes.anoread.annotation.handler.ReadFixedLine;
 import me.ronygomes.anoread.annotation.handler.ReadMultiLine;
 import me.ronygomes.anoread.annotation.handler.ReadSingleLine;
@@ -24,6 +26,7 @@ public class AnnotationTestModel {
     @ExtractDelimiterSeparatedInput
     private String field2;
 
+    @FormatErrorBasic
     @ReadFixedLine(lineCount = 2)
     private String field3;
 
@@ -35,6 +38,7 @@ public class AnnotationTestModel {
     @ReadMultiLine
     private String field5;
 
+    @FormatPromptBasic
     @ReadAttributes(prompt = "Enter field6: ", hint = "eg. Dog, Cat")
     private String field6;
 

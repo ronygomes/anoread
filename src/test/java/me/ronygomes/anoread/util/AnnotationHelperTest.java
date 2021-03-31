@@ -5,6 +5,10 @@ import me.ronygomes.anoread.converter.impl.IntegerConverter;
 import me.ronygomes.anoread.extractor.InputExtractor;
 import me.ronygomes.anoread.extractor.impl.DelimiterSeparatedInputExtractor;
 import me.ronygomes.anoread.extractor.impl.SingleInputExtractor;
+import me.ronygomes.anoread.formatter.ErrorPromptFormatter;
+import me.ronygomes.anoread.formatter.ReadPromptFormatter;
+import me.ronygomes.anoread.formatter.impl.BasicErrorPromptFormatter;
+import me.ronygomes.anoread.formatter.impl.BasicReadPromptFormatter;
 import me.ronygomes.anoread.handler.ReadHandler;
 import me.ronygomes.anoread.handler.impl.FixedLineReadHandler;
 import me.ronygomes.anoread.handler.impl.MultiLineReadHandler;
@@ -126,5 +130,35 @@ public class AnnotationHelperTest {
         assertEquals("field6", meta.getName());
         assertEquals("Enter field6: ", meta.getPrompt());
         assertEquals("eg. Dog, Cat", meta.getHint());
+    }
+
+    @Test
+    void testFieldWithoutReadFormatter() throws NoSuchFieldException {
+        Field field0 = AnnotationTestModel.class.getDeclaredField("field0");
+        ReadPromptFormatter formatter = extractReadPromptFormatter(field0.getDeclaredAnnotations());
+        assertNull(formatter);
+    }
+
+    @Test
+    void testFieldWithReadFormatter() throws NoSuchFieldException {
+        Field field6 = AnnotationTestModel.class.getDeclaredField("field6");
+        ReadPromptFormatter formatter = extractReadPromptFormatter(field6.getDeclaredAnnotations());
+        assertNotNull(formatter);
+        assertTrue(formatter instanceof BasicReadPromptFormatter);
+    }
+
+    @Test
+    void testFieldWithoutErrorFormatter() throws NoSuchFieldException {
+        Field field0 = AnnotationTestModel.class.getDeclaredField("field0");
+        ErrorPromptFormatter formatter = extractErrorPromptFormatter(field0.getDeclaredAnnotations());
+        assertNull(formatter);
+    }
+
+    @Test
+    void testFieldWithErrorFormatter() throws NoSuchFieldException {
+        Field field3 = AnnotationTestModel.class.getDeclaredField("field3");
+        ErrorPromptFormatter formatter = extractErrorPromptFormatter(field3.getDeclaredAnnotations());
+        assertNotNull(formatter);
+        assertTrue(formatter instanceof BasicErrorPromptFormatter);
     }
 }
