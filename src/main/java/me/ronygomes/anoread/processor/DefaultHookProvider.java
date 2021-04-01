@@ -16,6 +16,8 @@ import java.util.function.Consumer;
 
 public class DefaultHookProvider implements HookProvider {
 
+    private static HookProvider INSTANCE;
+
     @Override
     public ReadHandler getHandler() {
         return new SingleLineReadHandler();
@@ -33,7 +35,7 @@ public class DefaultHookProvider implements HookProvider {
 
     @Override
     public InputConverter<?> getConverter(Class<?> type) {
-        return Objects.requireNonNull(AnoreadContext.getDefaultConverterBytType(type));
+        return Objects.requireNonNull(AnoreadContext.getDefaultConverterByType(type));
     }
 
     @Override
@@ -50,5 +52,17 @@ public class DefaultHookProvider implements HookProvider {
     @Override
     public ErrorPromptFormatter getErrorPromptFormatter() {
         return new BasicErrorPromptFormatter(false);
+    }
+
+    public static HookProvider getInstance() {
+        if (INSTANCE == null) {
+            synchronized (DefaultHookProvider.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new DefaultHookProvider();
+                }
+            }
+        }
+
+        return INSTANCE;
     }
 }

@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 
 public class FieldLevelHookProvider implements HookProvider {
 
-    private ClassLevelHookProvider classLevelHookProvider;
+    private HookProvider parentHookProvider;
 
     private ReadHandler handler;
     private ReadPromptFormatter readPromptFormatter;
@@ -22,14 +22,14 @@ public class FieldLevelHookProvider implements HookProvider {
 
     private ErrorPromptFormatter errorPromptFormatter;
 
-    public FieldLevelHookProvider(ClassLevelHookProvider classLevelHookProvider,
+    public FieldLevelHookProvider(ClassLevelHookProvider parentHookProvider,
                                   ReadHandler handler,
                                   ReadPromptFormatter readPromptFormatter,
                                   InputExtractor extractor,
                                   InputConverter<?> converter,
                                   ErrorPromptFormatter errorPromptFormatter) {
 
-        this.classLevelHookProvider = classLevelHookProvider;
+        this.parentHookProvider = parentHookProvider;
         this.handler = handler;
         this.readPromptFormatter = readPromptFormatter;
         this.extractor = extractor;
@@ -40,7 +40,7 @@ public class FieldLevelHookProvider implements HookProvider {
     @Override
     public ReadHandler getHandler() {
         if (Objects.isNull(handler)) {
-            return classLevelHookProvider.getHandler();
+            return parentHookProvider.getHandler();
         }
 
         return handler;
@@ -49,7 +49,7 @@ public class FieldLevelHookProvider implements HookProvider {
     @Override
     public ReadPromptFormatter getReadPromptFormatter() {
         if (Objects.isNull(readPromptFormatter)) {
-            return classLevelHookProvider.getReadPromptFormatter();
+            return parentHookProvider.getReadPromptFormatter();
         }
 
         return readPromptFormatter;
@@ -58,7 +58,7 @@ public class FieldLevelHookProvider implements HookProvider {
     @Override
     public InputExtractor getExtractor(Class<?> type) {
         if (Objects.isNull(extractor)) {
-            return classLevelHookProvider.getExtractor(type);
+            return parentHookProvider.getExtractor(type);
         }
 
         return extractor;
@@ -67,7 +67,7 @@ public class FieldLevelHookProvider implements HookProvider {
     @Override
     public InputConverter<?> getConverter(Class<?> type) {
         if (Objects.isNull(converter)) {
-            return classLevelHookProvider.getConverter(type);
+            return parentHookProvider.getConverter(type);
         }
 
         return converter;
@@ -75,13 +75,13 @@ public class FieldLevelHookProvider implements HookProvider {
 
     @Override
     public Consumer<Object> getAssigner(Field field, Object object, Object value) {
-        return classLevelHookProvider.getAssigner(field, object, value);
+        return parentHookProvider.getAssigner(field, object, value);
     }
 
     @Override
     public ErrorPromptFormatter getErrorPromptFormatter() {
         if (Objects.isNull(errorPromptFormatter)) {
-            return classLevelHookProvider.getErrorPromptFormatter();
+            return parentHookProvider.getErrorPromptFormatter();
         }
 
         return errorPromptFormatter;

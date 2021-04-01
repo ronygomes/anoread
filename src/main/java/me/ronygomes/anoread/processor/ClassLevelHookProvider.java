@@ -12,17 +12,17 @@ import java.util.function.Consumer;
 
 public class ClassLevelHookProvider implements HookProvider {
 
-    private DefaultHookProvider defaultHookProvider;
+    private HookProvider parentHookProvider;
     private ReadHandler handler;
     private ReadPromptFormatter readPromptFormatter;
     private ErrorPromptFormatter errorPromptFormatter;
 
-    public ClassLevelHookProvider(DefaultHookProvider defaultHookProvider,
+    public ClassLevelHookProvider(HookProvider parentHookProvider,
                                   ReadHandler handler,
                                   ReadPromptFormatter readPromptFormatter,
                                   ErrorPromptFormatter errorPromptFormatter) {
 
-        this.defaultHookProvider = defaultHookProvider;
+        this.parentHookProvider = parentHookProvider;
         this.handler = handler;
         this.readPromptFormatter = readPromptFormatter;
         this.errorPromptFormatter = errorPromptFormatter;
@@ -31,7 +31,7 @@ public class ClassLevelHookProvider implements HookProvider {
     @Override
     public ReadHandler getHandler() {
         if (Objects.isNull(handler)) {
-            return defaultHookProvider.getHandler();
+            return parentHookProvider.getHandler();
         }
 
         return handler;
@@ -40,7 +40,7 @@ public class ClassLevelHookProvider implements HookProvider {
     @Override
     public ReadPromptFormatter getReadPromptFormatter() {
         if (Objects.isNull(readPromptFormatter)) {
-            return defaultHookProvider.getReadPromptFormatter();
+            return parentHookProvider.getReadPromptFormatter();
         }
 
         return readPromptFormatter;
@@ -48,23 +48,23 @@ public class ClassLevelHookProvider implements HookProvider {
 
     @Override
     public InputExtractor getExtractor(Class<?> type) {
-        return defaultHookProvider.getExtractor(type);
+        return parentHookProvider.getExtractor(type);
     }
 
     @Override
     public InputConverter<?> getConverter(Class<?> type) {
-        return defaultHookProvider.getConverter(type);
+        return parentHookProvider.getConverter(type);
     }
 
     @Override
     public Consumer<Object> getAssigner(Field field, Object object, Object value) {
-        return defaultHookProvider.getAssigner(field, object, value);
+        return parentHookProvider.getAssigner(field, object, value);
     }
 
     @Override
     public ErrorPromptFormatter getErrorPromptFormatter() {
         if (Objects.isNull(errorPromptFormatter)) {
-            return defaultHookProvider.getErrorPromptFormatter();
+            return parentHookProvider.getErrorPromptFormatter();
         }
 
         return errorPromptFormatter;
