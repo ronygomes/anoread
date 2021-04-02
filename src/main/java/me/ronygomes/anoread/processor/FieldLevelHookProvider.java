@@ -22,7 +22,7 @@ public class FieldLevelHookProvider implements HookProvider {
 
     private ErrorPromptFormatter errorPromptFormatter;
 
-    public FieldLevelHookProvider(ClassLevelHookProvider parentHookProvider,
+    public FieldLevelHookProvider(HookProvider parentHookProvider,
                                   ReadHandler handler,
                                   ReadPromptFormatter readPromptFormatter,
                                   InputExtractor extractor,
