@@ -14,11 +14,17 @@ import me.ronygomes.anoread.handler.impl.FixedLineReadHandler;
 import me.ronygomes.anoread.handler.impl.MultiLineReadHandler;
 import me.ronygomes.anoread.handler.impl.SingleLineReadHandler;
 import me.ronygomes.anoread.model.AnnotationTestModel;
+import me.ronygomes.anoread.model.ReadFieldTest;
 import me.ronygomes.anoread.model.ReadMeta;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.lang.reflect.Field;
+import java.util.List;
 
+import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 import static me.ronygomes.anoread.util.AnnotationHelper.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -160,5 +166,37 @@ public class AnnotationHelperTest {
         ErrorPromptFormatter formatter = extractErrorPromptFormatter(field3.getDeclaredAnnotations());
         assertNotNull(formatter);
         assertTrue(formatter instanceof BasicErrorPromptFormatter);
+    }
+
+    @Test
+    void testGetOrderedReadFieldsWhenEmpty() {
+        List<Field> fields = getOrderedReadFields(AnnotationTestModel.class.getDeclaredFields());
+        assertEquals(0, fields.size());
+    }
+
+    @Test
+    void testGetOrderedReadFieldsWithData() {
+        List<Field> fields = getOrderedReadFields(ReadFieldTest.class.getDeclaredFields());
+        assertEquals(3, fields.size());
+        assertIterableEquals(asList("field4", "field1", "field2"),
+                fields.stream().map(Field::getName).collect(toList()));
+    }
+
+    @Test
+    void testGetFields() {
+        ByteArrayOutputStream baosErr = new ByteArrayOutputStream();
+        PrintStream err = new PrintStream(baosErr);
+
+        PrintStream stdErr = System.err;
+        System.setErr(err);
+
+        List<Field> fields = getFields(ReadFieldTest.class, asList("field4", "field7", "field3"));
+
+        assertEquals(2, fields.size());
+        assertIterableEquals(asList("field4", "field3"),
+                fields.stream().map(Field::getName).collect(toList()));
+        assertTrue(baosErr.toString().startsWith("java.lang.NoSuchFieldException: field7"));
+
+        System.setErr(stdErr);
     }
 }

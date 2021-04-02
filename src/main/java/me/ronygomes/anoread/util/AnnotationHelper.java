@@ -2,6 +2,7 @@ package me.ronygomes.anoread.util;
 
 import me.ronygomes.anoread.annotation.Converter;
 import me.ronygomes.anoread.annotation.ReadAttributes;
+import me.ronygomes.anoread.annotation.ReadField;
 import me.ronygomes.anoread.annotation.extractor.InputExtractorType;
 import me.ronygomes.anoread.annotation.formatter.ErrorPromptFormatterType;
 import me.ronygomes.anoread.annotation.formatter.ReadPromptFormatterType;
@@ -15,7 +16,7 @@ import me.ronygomes.anoread.model.ReadMeta;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.util.Objects;
+import java.util.*;
 
 public class AnnotationHelper {
 
@@ -113,5 +114,35 @@ public class AnnotationHelper {
         }
 
         return null;
+    }
+
+    public static List<Field> getOrderedReadFields(Field[] fields) {
+        List<Field> outFields = new ArrayList<>();
+        Map<Field, Integer> map = new HashMap<>();
+
+        for (Field field : fields) {
+            ReadField rf = field.getAnnotation(ReadField.class);
+            if (Objects.nonNull(rf)) {
+                map.put(field, rf.order());
+                outFields.add(field);
+            }
+        }
+
+        outFields.sort(Comparator.comparingInt(map::get));
+        return outFields;
+    }
+
+    public static List<Field> getFields(Class<?> classType, List<String> fields) {
+        List<Field> outFields = new ArrayList<>();
+
+        for (String field : fields) {
+            try {
+                outFields.add(classType.getDeclaredField(field));
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return outFields;
     }
 }
