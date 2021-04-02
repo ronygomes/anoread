@@ -74,8 +74,8 @@ public class FieldLevelHookProvider implements HookProvider {
     }
 
     @Override
-    public Consumer<Object> getAssigner(Field field, Object object, Object value) {
-        return parentHookProvider.getAssigner(field, object, value);
+    public Consumer<Object> getAssigner(Field field, Object object) {
+        return parentHookProvider.getAssigner(field, object);
     }
 
     @Override

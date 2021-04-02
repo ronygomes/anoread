@@ -39,9 +39,10 @@ public class DefaultHookProvider implements HookProvider {
     }
 
     @Override
-    public Consumer<Object> getAssigner(Field field, Object object, Object value) {
-        return o -> {
+    public Consumer<Object> getAssigner(final Field field, final Object object) {
+        return value -> {
             try {
+                field.setAccessible(true);
                 field.set(object, value);
             } catch (IllegalAccessException e) {
                 e.printStackTrace();

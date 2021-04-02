@@ -48,8 +48,8 @@ public class FieldLevelHookProviderTest {
         c.getErrorPromptFormatter();
         verify(hookProvider, times(1)).getErrorPromptFormatter();
 
-        c.getAssigner(null, null, null);
-        verify(hookProvider, times(1)).getAssigner(null, null, null);
+        c.getAssigner(null, null);
+        verify(hookProvider, times(1)).getAssigner(null, null);
 
         c.getConverter(Integer.class);
         verify(hookProvider, times(1)).getConverter(Integer.class);
@@ -72,8 +72,8 @@ public class FieldLevelHookProviderTest {
         assertSame(errorPromptFormatter, c.getErrorPromptFormatter());
         verify(hookProvider, times(0)).getErrorPromptFormatter();
 
-        c.getAssigner(null, null, null);
-        verify(hookProvider, times(1)).getAssigner(null, null, null);
+        c.getAssigner(null, null);
+        verify(hookProvider, times(1)).getAssigner(null, null);
 
         assertSame(inputConverter, c.getConverter(Integer.class));
         verify(hookProvider, times(0)).getConverter(Integer.class);

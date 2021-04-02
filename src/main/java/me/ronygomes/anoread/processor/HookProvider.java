@@ -19,7 +19,7 @@ public interface HookProvider {
 
     InputConverter<?> getConverter(Class<?> type);
 
-    Consumer<Object> getAssigner(Field field, Object object, Object value);
+    Consumer<Object> getAssigner(final Field field, final Object object);
 
     ErrorPromptFormatter getErrorPromptFormatter();
 }

@@ -7,11 +7,14 @@ import me.ronygomes.anoread.extractor.impl.SingleInputExtractor;
 import me.ronygomes.anoread.formatter.impl.BasicErrorPromptFormatter;
 import me.ronygomes.anoread.formatter.impl.BasicReadPromptFormatter;
 import me.ronygomes.anoread.handler.impl.SingleLineReadHandler;
+import me.ronygomes.anoread.model.Person;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Field;
+import java.util.function.Consumer;
+
 import static me.ronygomes.anoread.processor.DefaultHookProvider.getInstance;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DefaultHookProviderTest {
 
@@ -60,5 +63,24 @@ public class DefaultHookProviderTest {
     @Test
     void testDefaultErrorFormatterIsBasicErrorPromptFormatter() {
         assertTrue(getInstance().getErrorPromptFormatter() instanceof BasicErrorPromptFormatter);
+    }
+
+    @Test
+    void testDefaultAssigner() throws NoSuchFieldException {
+        Person p = new Person();
+
+        Field name = Person.class.getDeclaredField("name");
+        Field age = Person.class.getDeclaredField("age");
+
+        HookProvider i1 = getInstance();
+
+        Consumer<Object> nameAssigner = i1.getAssigner(name, p);
+        nameAssigner.accept("John");
+
+        Consumer<Object> ageAssigner = i1.getAssigner(age, p);
+        ageAssigner.accept(27);
+
+        assertEquals("John", p.getName());
+        assertEquals(27, p.getAge());
     }
 }
