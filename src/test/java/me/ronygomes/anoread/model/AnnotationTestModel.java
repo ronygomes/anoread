@@ -12,6 +12,9 @@ import me.ronygomes.anoread.annotation.handler.ReadMultiLine;
 import me.ronygomes.anoread.annotation.handler.ReadSingleLine;
 import me.ronygomes.anoread.converter.impl.IntegerConverter;
 
+@ReadMultiLine
+@FormatErrorBasic
+@FormatPromptBasic
 public class AnnotationTestModel {
 
     @NotImportant

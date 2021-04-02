@@ -16,6 +16,7 @@ import me.ronygomes.anoread.handler.impl.SingleLineReadHandler;
 import me.ronygomes.anoread.model.AnnotationTestModel;
 import me.ronygomes.anoread.model.ReadFieldTest;
 import me.ronygomes.anoread.model.ReadMeta;
+import me.ronygomes.anoread.processor.HookProvider;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -27,6 +28,7 @@ import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static me.ronygomes.anoread.util.AnnotationHelper.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 public class AnnotationHelperTest {
 
@@ -198,5 +200,53 @@ public class AnnotationHelperTest {
         assertTrue(baosErr.toString().startsWith("java.lang.NoSuchFieldException: field7"));
 
         System.setErr(stdErr);
+    }
+
+    @Test
+    void testCreateClassHookProviderWithEmptyClass() {
+        HookProvider hookProvider = mock(HookProvider.class);
+        HookProvider c = createClassHookProvider(hookProvider, ReadFieldTest.class.getAnnotations());
+
+        c.getHandler();
+        verify(hookProvider, times(1)).getHandler();
+
+        c.getReadPromptFormatter();
+        verify(hookProvider, times(1)).getReadPromptFormatter();
+
+        c.getErrorPromptFormatter();
+        verify(hookProvider, times(1)).getErrorPromptFormatter();
+
+        c.getAssigner(null, null);
+        verify(hookProvider, times(1)).getAssigner(null, null);
+
+        c.getConverter(Integer.class);
+        verify(hookProvider, times(1)).getConverter(Integer.class);
+
+        c.getExtractor(Integer.class);
+        verify(hookProvider, times(1)).getExtractor(Integer.class);
+    }
+
+    @Test
+    void testCreateClassHookProviderWithValue() {
+        HookProvider hookProvider = mock(HookProvider.class);
+        HookProvider c = createClassHookProvider(hookProvider, AnnotationTestModel.class.getAnnotations());
+
+        assertTrue(c.getHandler() instanceof MultiLineReadHandler);
+        verify(hookProvider, times(0)).getHandler();
+
+        assertTrue(c.getReadPromptFormatter() instanceof BasicReadPromptFormatter);
+        verify(hookProvider, times(0)).getReadPromptFormatter();
+
+        assertTrue(c.getErrorPromptFormatter() instanceof BasicErrorPromptFormatter);
+        verify(hookProvider, times(0)).getErrorPromptFormatter();
+
+        c.getAssigner(null, null);
+        verify(hookProvider, times(1)).getAssigner(null, null);
+
+        c.getConverter(Integer.class);
+        verify(hookProvider, times(1)).getConverter(Integer.class);
+
+        c.getExtractor(Integer.class);
+        verify(hookProvider, times(1)).getExtractor(Integer.class);
     }
 }

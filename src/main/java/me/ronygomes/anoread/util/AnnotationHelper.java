@@ -13,6 +13,8 @@ import me.ronygomes.anoread.formatter.ErrorPromptFormatter;
 import me.ronygomes.anoread.formatter.ReadPromptFormatter;
 import me.ronygomes.anoread.handler.ReadHandler;
 import me.ronygomes.anoread.model.ReadMeta;
+import me.ronygomes.anoread.processor.ClassLevelHookProvider;
+import me.ronygomes.anoread.processor.HookProvider;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -144,5 +146,10 @@ public class AnnotationHelper {
         }
 
         return outFields;
+    }
+
+    public static HookProvider createClassHookProvider(HookProvider parent, Annotation[] annotations) {
+        return new ClassLevelHookProvider(parent, extractReadHandler(annotations),
+                extractReadPromptFormatter(annotations), extractErrorPromptFormatter(annotations));
     }
 }
