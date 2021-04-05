@@ -18,17 +18,25 @@ public sum(@ReadAttributes(prompt = "Price") float price) {
 ```java
 
 class Person {
-
-@ReadField
-private String name;
-
-@ReadEmbedded
-private Address person;
+    @ReadField
+    private String name;
+    
+    @ReadEmbedded
+    private Address person;
 }
 ```
 
-[ ] Read promt & hint from property file
+[ ] Read prompt & hint from property file
 ```java
 @ReadAttributes(prompt = "{name.prompt}")
 private String name;
+```
+
+[ ] Make @ReadBegin, @ReadEnd, @ReadEachPre, @ReadEachPost, @Validator method dynamic.
+Now has to match exact return type & parameters list.
+```java
+@ReadEachPre
+String method(ReadMeta meta, String other) {
+    return "Something";
+}
 ```
