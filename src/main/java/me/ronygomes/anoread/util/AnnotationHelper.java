@@ -18,6 +18,7 @@ import me.ronygomes.anoread.processor.HookProvider;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.*;
 
 public class AnnotationHelper {
@@ -151,5 +152,20 @@ public class AnnotationHelper {
     public static HookProvider createClassHookProvider(HookProvider parent, Annotation[] annotations) {
         return new ClassLevelHookProvider(parent, extractReadHandler(annotations),
                 extractReadPromptFormatter(annotations), extractErrorPromptFormatter(annotations));
+    }
+
+    public static Method findMethodWithAnnotationAndSignature(Method[] methods,
+                                                              Class<? extends Annotation> type,
+                                                              Class<?>[] parameterTypes,
+                                                              Class<?> returnType) {
+        for (Method method : methods) {
+            if (method.isAnnotationPresent(type)
+                    && Arrays.equals(method.getParameterTypes(), parameterTypes)
+                    && method.getReturnType().equals(returnType)) {
+                return method;
+            }
+        }
+
+        return null;
     }
 }

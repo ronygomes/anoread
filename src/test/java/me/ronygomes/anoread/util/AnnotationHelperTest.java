@@ -1,5 +1,6 @@
 package me.ronygomes.anoread.util;
 
+import me.ronygomes.anoread.annotation.ReadEachPre;
 import me.ronygomes.anoread.converter.InputConverter;
 import me.ronygomes.anoread.converter.impl.IntegerConverter;
 import me.ronygomes.anoread.extractor.InputExtractor;
@@ -14,14 +15,17 @@ import me.ronygomes.anoread.handler.impl.FixedLineReadHandler;
 import me.ronygomes.anoread.handler.impl.MultiLineReadHandler;
 import me.ronygomes.anoread.handler.impl.SingleLineReadHandler;
 import me.ronygomes.anoread.model.AnnotationTestModel;
+import me.ronygomes.anoread.model.MethodTestModel;
 import me.ronygomes.anoread.model.ReadFieldTest;
 import me.ronygomes.anoread.model.ReadMeta;
 import me.ronygomes.anoread.processor.HookProvider;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -248,5 +252,85 @@ public class AnnotationHelperTest {
 
         c.getExtractor(Integer.class);
         verify(hookProvider, times(1)).getExtractor(Integer.class);
+    }
+
+    @Test
+    void testFindMethodWithAnnotationAndSignatureChecksAnnotation() throws NoSuchMethodException {
+        Method method0 = MethodTestModel.class.getDeclaredMethod("method0",
+                InputStream.class, PrintStream.class, PrintStream.class, ReadMeta.class);
+
+        Method method = findMethodWithAnnotationAndSignature(new Method[]{method0},
+                ReadEachPre.class,
+                new Class<?>[]{InputStream.class, PrintStream.class, PrintStream.class, ReadMeta.class},
+                Boolean.class);
+
+        assertNull(method);
+    }
+
+    @Test
+    void testFindMethodWithAnnotationAndSignatureReturnMethod() throws NoSuchMethodException {
+        Method method1 = MethodTestModel.class.getDeclaredMethod("method1",
+                InputStream.class, PrintStream.class, PrintStream.class, ReadMeta.class);
+
+        Method method = findMethodWithAnnotationAndSignature(new Method[]{method1},
+                ReadEachPre.class,
+                new Class<?>[]{InputStream.class, PrintStream.class, PrintStream.class, ReadMeta.class},
+                Boolean.class);
+
+        assertNotNull(method);
+        assertEquals("method1", method.getName());
+    }
+
+    @Test
+    void testFindMethodWithAnnotationAndPrimitiveSignatureDoesNotReturnMethod() throws NoSuchMethodException {
+        Method method2 = MethodTestModel.class.getDeclaredMethod("method2",
+                InputStream.class, PrintStream.class, PrintStream.class, ReadMeta.class);
+
+        Method method = findMethodWithAnnotationAndSignature(new Method[]{method2},
+                ReadEachPre.class,
+                new Class<?>[]{InputStream.class, PrintStream.class, PrintStream.class, ReadMeta.class},
+                boolean.class);
+
+        assertNotNull(method);
+        assertEquals("method2", method.getName());
+    }
+
+    @Test
+    void testFindMethodWithAnnotationAndSignatureChecksParameters() throws NoSuchMethodException {
+        Method method3 = MethodTestModel.class.getDeclaredMethod("method3",
+                InputStream.class, PrintStream.class, PrintStream.class);
+
+        Method method = findMethodWithAnnotationAndSignature(new Method[]{method3},
+                ReadEachPre.class,
+                new Class<?>[]{InputStream.class, PrintStream.class, PrintStream.class, ReadMeta.class},
+                Boolean.class);
+
+        assertNull(method);
+    }
+
+    @Test
+    void testFindMethodWithAnnotationAndSignatureChecksParameterOrder() throws NoSuchMethodException {
+        Method method4 = MethodTestModel.class.getDeclaredMethod("method4",
+                PrintStream.class, InputStream.class, PrintStream.class, ReadMeta.class);
+
+        Method method = findMethodWithAnnotationAndSignature(new Method[]{method4},
+                ReadEachPre.class,
+                new Class<?>[]{InputStream.class, PrintStream.class, PrintStream.class, ReadMeta.class},
+                Boolean.class);
+
+        assertNull(method);
+    }
+
+    @Test
+    void testFindMethodWithAnnotationAndSignatureChecksReturnType() throws NoSuchMethodException {
+        Method method5 = MethodTestModel.class.getDeclaredMethod("method5",
+                InputStream.class, PrintStream.class, PrintStream.class, ReadMeta.class);
+
+        Method method = findMethodWithAnnotationAndSignature(new Method[]{method5},
+                ReadEachPre.class,
+                new Class<?>[]{InputStream.class, PrintStream.class, PrintStream.class, ReadMeta.class},
+                Boolean.class);
+
+        assertNull(method);
     }
 }
