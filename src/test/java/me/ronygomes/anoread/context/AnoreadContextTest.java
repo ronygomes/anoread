@@ -1,6 +1,5 @@
-package me.ronygomes.context;
+package me.ronygomes.anoread.context;
 
-import me.ronygomes.anoread.context.AnoreadContext;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
