@@ -27,6 +27,7 @@ public class ReadTask<T> implements Serializable {
     private InputExtractor extractor;
     private InputConverter<T> converter;
 
+    private Consumer<Object> validator;
     private Consumer<Object> assigner;
     private ErrorPromptFormatter errorPromptFormatter;
 
@@ -94,6 +95,14 @@ public class ReadTask<T> implements Serializable {
         this.converter = converter;
     }
 
+    public Consumer<Object> getValidator() {
+        return validator;
+    }
+
+    public void setValidator(Consumer<Object> validator) {
+        this.validator = validator;
+    }
+
     public Consumer<Object> getAssigner() {
         return assigner;
     }
@@ -108,8 +117,5 @@ public class ReadTask<T> implements Serializable {
 
     public void setErrorPromptFormatter(ErrorPromptFormatter errorPromptFormatter) {
         this.errorPromptFormatter = errorPromptFormatter;
-    }
-
-    public void validate(Object value) {
     }
 }

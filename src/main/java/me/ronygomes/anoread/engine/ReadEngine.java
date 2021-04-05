@@ -68,7 +68,10 @@ public class ReadEngine {
 
                     input = task.getConverter().convert(parts);
 
-                    task.validate(input);
+                    if (Objects.nonNull(task.getValidator())) {
+                        task.getValidator().accept(input);
+                    }
+
                     task.getAssigner().accept(input);
 
                     doContinue = false;

@@ -78,6 +78,9 @@ public class ReadEngineTest {
     private InputConverter<?> converter;
 
     @Mock
+    private Consumer<Object> validator;
+
+    @Mock
     private Consumer<Object> assigner;
 
     @Mock
@@ -244,6 +247,7 @@ public class ReadEngineTest {
         verify(handler, times(1)).read(in, out, err);
         verify(extractor, times(1)).extract(any());
         verify(converter, times(1)).convert(any());
+        verify(validator, times(0)).accept(any());
         verify(assigner, times(1)).accept(any());
         verify(errorPromptFormatter, times(0)).format(any(), any(), any());
 
@@ -263,7 +267,7 @@ public class ReadEngineTest {
         stubReadTaskCommonMethods();
 
         AnoReadException e = new ValidationError();
-        doThrow(e).doNothing().when(readTask).validate(any());
+        doThrow(e).doNothing().when(validator).accept(any());
         when(readTask.getErrorPromptFormatter()).thenReturn(errorPromptFormatter);
 
         when(before.apply(in, out, err, null)).thenReturn(true);
@@ -281,7 +285,7 @@ public class ReadEngineTest {
         verify(extractor, times(2)).extract(any());
         verify(converter, times(2)).convert(any());
         verify(assigner, times(1)).accept(any());
-        verify(readTask, times(2)).validate(any());
+        verify(validator, times(2)).accept(any());
         verify(errorPromptFormatter, times(1)).format(any(), any(), eq(e));
 
         verify(after, times(1)).accept(in, out, err, null);
@@ -318,7 +322,7 @@ public class ReadEngineTest {
         verify(extractor, times(2)).extract(any());
         verify(converter, times(1)).convert(any());
         verify(assigner, times(1)).accept(any());
-        verify(readTask, times(1)).validate(any());
+        verify(validator, times(1)).accept(any());
         verify(errorPromptFormatter, times(1)).format(any(), any(), any());
 
         verify(after, times(1)).accept(in, out, err, null);
@@ -355,7 +359,7 @@ public class ReadEngineTest {
         verify(extractor, times(2)).extract(any());
         verify(converter, times(2)).convert(any());
         verify(assigner, times(1)).accept(any());
-        verify(readTask, times(1)).validate(any());
+        verify(validator, times(1)).accept(any());
         verify(errorPromptFormatter, times(1)).format(any(), any(), any());
 
         verify(after, times(1)).accept(in, out, err, null);
@@ -434,6 +438,7 @@ public class ReadEngineTest {
         when(readTask.getHandler()).thenReturn(handler);
         when(readTask.getExtractor()).thenReturn(extractor);
         doReturn(this.converter).when(readTask).getConverter();
+        when(readTask.getValidator()).thenReturn(validator);
         when(readTask.getAssigner()).thenReturn(assigner);
         when(readTask.getAfter()).thenReturn(after);
     }
