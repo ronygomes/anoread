@@ -7,6 +7,7 @@ import me.ronygomes.anoread.model.ReadTask;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.util.Objects;
 
 public class ReadEngine {
 
@@ -38,18 +39,22 @@ public class ReadEngine {
             return;
         }
 
-        cmd.getBeginConsumer().accept(in, out, err);
+        if (Objects.nonNull(cmd.getBeginConsumer())) {
+            cmd.getBeginConsumer().accept(in, out, err);
+        }
 
         String line;
-        String[] parts = null;
+        String[] parts;
         Object input;
         boolean doContinue;
 
         for (ReadTask<?> task : cmd.getTasks()) {
 
-            boolean processThisTask = task.getBefore().apply(in, out, err, task.getMeta());
-            if (!processThisTask) {
-                continue;
+            if (Objects.nonNull(task.getBefore())) {
+                boolean processThisTask = task.getBefore().apply(in, out, err, task.getMeta());
+                if (!processThisTask) {
+                    continue;
+                }
             }
 
             doContinue = true;
@@ -72,9 +77,13 @@ public class ReadEngine {
                 }
             }
 
-            task.getAfter().accept(in, out, err, task.getMeta());
+            if (Objects.nonNull(task.getAfter())) {
+                task.getAfter().accept(in, out, err, task.getMeta());
+            }
         }
 
-        cmd.getEndConsumer().accept(in, out, err);
+        if (Objects.nonNull(cmd.getEndConsumer())) {
+            cmd.getEndConsumer().accept(in, out, err);
+        }
     }
 }

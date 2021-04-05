@@ -222,6 +222,39 @@ public class ReadEngineTest {
     }
 
     @Test
+    public void testEngineWithSingleValidTaskWithoutAnyHook() throws IOException {
+
+        when(engineCmd.getTasks()).thenReturn(tasks);
+
+        when(readTask.getReadPromptFormatter()).thenReturn(readPromptFormatter);
+        when(readTask.getHandler()).thenReturn(handler);
+        when(readTask.getExtractor()).thenReturn(extractor);
+        doReturn(this.converter).when(readTask).getConverter();
+        when(readTask.getAssigner()).thenReturn(assigner);
+
+        when(readPromptFormatter.format(any())).thenReturn(DUMMY_READ_PROMPT_TEXT);
+
+        ReadEngine engine = new ReadEngine(in, out, err);
+        engine.execute(engineCmd);
+
+        verify(beginConsumer, times(0)).accept(in, out, err);
+        verify(before, times(0)).apply(in, out, err, null);
+
+        verify(readPromptFormatter, times(1)).format(any());
+        verify(handler, times(1)).read(in, out, err);
+        verify(extractor, times(1)).extract(any());
+        verify(converter, times(1)).convert(any());
+        verify(assigner, times(1)).accept(any());
+        verify(errorPromptFormatter, times(0)).format(any(), any(), any());
+
+        verify(after, times(0)).accept(in, out, err, null);
+        verify(endConsumer, times(0)).accept(in, out, err);
+
+        assertArrayEquals(DUMMY_READ_PROMPT_TEXT.getBytes(UTF_8), baosOut.toByteArray());
+        assertArrayEquals(new byte[0], baosErr.toByteArray());
+    }
+
+    @Test
     public void testEngineWithValidationError() throws IOException {
 
         stubEngineCmdConsumers();
