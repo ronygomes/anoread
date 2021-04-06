@@ -14,6 +14,13 @@ public class ReadEngineCmd implements Serializable {
     private List<ReadTask<?>> tasks;
 
     public ReadEngineCmd(TriConsumer<InputStream, PrintStream, PrintStream> beginConsumer,
+                         TriConsumer<InputStream, PrintStream, PrintStream> endConsumer) {
+
+        this.beginConsumer = beginConsumer;
+        this.endConsumer = endConsumer;
+    }
+
+    public ReadEngineCmd(TriConsumer<InputStream, PrintStream, PrintStream> beginConsumer,
                          TriConsumer<InputStream, PrintStream, PrintStream> endConsumer,
                          List<ReadTask<?>> tasks) {
 

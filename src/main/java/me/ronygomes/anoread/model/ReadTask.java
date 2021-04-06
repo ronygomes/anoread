@@ -25,7 +25,7 @@ public class ReadTask<T> implements Serializable {
     private ReadPromptFormatter readPromptFormatter;
 
     private InputExtractor extractor;
-    private InputConverter<T> converter;
+    private InputConverter<?> converter;
 
     private Consumer<Object> validator;
     private Consumer<Object> assigner;
@@ -87,11 +87,11 @@ public class ReadTask<T> implements Serializable {
         this.extractor = extractor;
     }
 
-    public InputConverter<T> getConverter() {
+    public InputConverter<?> getConverter() {
         return converter;
     }
 
-    public void setConverter(InputConverter<T> converter) {
+    public void setConverter(InputConverter<?> converter) {
         this.converter = converter;
     }
 

@@ -1,8 +1,6 @@
 package me.ronygomes.anoread.util;
 
-import me.ronygomes.anoread.annotation.Converter;
-import me.ronygomes.anoread.annotation.ReadAttributes;
-import me.ronygomes.anoread.annotation.ReadField;
+import me.ronygomes.anoread.annotation.*;
 import me.ronygomes.anoread.annotation.extractor.InputExtractorType;
 import me.ronygomes.anoread.annotation.formatter.ErrorPromptFormatterType;
 import me.ronygomes.anoread.annotation.formatter.ReadPromptFormatterType;
@@ -14,8 +12,11 @@ import me.ronygomes.anoread.formatter.ReadPromptFormatter;
 import me.ronygomes.anoread.handler.ReadHandler;
 import me.ronygomes.anoread.model.ReadMeta;
 import me.ronygomes.anoread.processor.ClassLevelHookProvider;
+import me.ronygomes.anoread.processor.FieldLevelHookProvider;
 import me.ronygomes.anoread.processor.HookProvider;
 
+import java.io.InputStream;
+import java.io.PrintStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -154,6 +155,12 @@ public class AnnotationHelper {
                 extractReadPromptFormatter(annotations), extractErrorPromptFormatter(annotations));
     }
 
+    public static HookProvider createFieldHookProvider(HookProvider parent, Annotation[] annotations) {
+        return new FieldLevelHookProvider(parent, extractReadHandler(annotations),
+                extractReadPromptFormatter(annotations), extractInputExtractor(annotations),
+                extractConverter(annotations), extractErrorPromptFormatter(annotations));
+    }
+
     public static Method findMethodWithAnnotationAndSignature(Method[] methods,
                                                               Class<? extends Annotation> type,
                                                               Class<?>[] parameterTypes,
@@ -167,5 +174,35 @@ public class AnnotationHelper {
         }
 
         return null;
+    }
+
+    public static Method extractReadBegin(Method[] methods) {
+        return findMethodWithAnnotationAndSignature(methods, ReadBegin.class,
+                new Class<?>[]{InputStream.class, PrintStream.class, PrintStream.class},
+                void.class);
+    }
+
+    public static Method extractReadEnd(Method[] methods) {
+        return findMethodWithAnnotationAndSignature(methods, ReadEnd.class,
+                new Class<?>[]{InputStream.class, PrintStream.class, PrintStream.class},
+                void.class);
+    }
+
+    public static Method extractReadEachPre(Method[] methods) {
+        return findMethodWithAnnotationAndSignature(methods, ReadEachPre.class,
+                new Class<?>[]{InputStream.class, PrintStream.class, PrintStream.class, ReadMeta.class},
+                boolean.class);
+    }
+
+    public static Method extractReadEachPost(Method[] methods) {
+        return findMethodWithAnnotationAndSignature(methods, ReadEachPost.class,
+                new Class<?>[]{InputStream.class, PrintStream.class, PrintStream.class, ReadMeta.class},
+                void.class);
+    }
+
+    public static Method extractValidator(Method[] methods) {
+        return findMethodWithAnnotationAndSignature(methods, Validator.class,
+                new Class<?>[]{Object.class},
+                void.class);
     }
 }
