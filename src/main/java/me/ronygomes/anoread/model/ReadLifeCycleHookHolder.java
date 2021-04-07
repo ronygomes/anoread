@@ -6,7 +6,7 @@ import me.ronygomes.anoread.util.function.TriConsumer;
 
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 public class ReadLifeCycleHookHolder {
 
@@ -15,7 +15,7 @@ public class ReadLifeCycleHookHolder {
 
     private QuadFunction<InputStream, PrintStream, PrintStream, ReadMeta, Boolean> readEachPre;
     private QuadConsumer<InputStream, PrintStream, PrintStream, ReadMeta> readEachPost;
-    private Consumer<Object> validator;
+    private BiConsumer<Object, ReadMeta> validator;
 
     public TriConsumer<InputStream, PrintStream, PrintStream> getReadBegin() {
         return readBegin;
@@ -49,11 +49,11 @@ public class ReadLifeCycleHookHolder {
         this.readEachPost = readEachPost;
     }
 
-    public Consumer<Object> getValidator() {
+    public BiConsumer<Object, ReadMeta> getValidator() {
         return validator;
     }
 
-    public void setValidator(Consumer<Object> validator) {
+    public void setValidator(BiConsumer<Object, ReadMeta> validator) {
         this.validator = validator;
     }
 }

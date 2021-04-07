@@ -33,6 +33,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static java.math.BigInteger.TEN;
@@ -78,7 +79,7 @@ public class ReadEngineTest {
     private InputConverter<?> converter;
 
     @Mock
-    private Consumer<Object> validator;
+    private BiConsumer<Object, ReadMeta> validator;
 
     @Mock
     private Consumer<Object> assigner;
@@ -247,7 +248,7 @@ public class ReadEngineTest {
         verify(handler, times(1)).read(in, out, err);
         verify(extractor, times(1)).extract(any());
         verify(converter, times(1)).convert(any());
-        verify(validator, times(0)).accept(any());
+        verify(validator, times(0)).accept(any(), any());
         verify(assigner, times(1)).accept(any());
         verify(errorPromptFormatter, times(0)).format(any(), any(), any());
 
@@ -267,7 +268,7 @@ public class ReadEngineTest {
         stubReadTaskCommonMethods();
 
         AnoReadException e = new ValidationError();
-        doThrow(e).doNothing().when(validator).accept(any());
+        doThrow(e).doNothing().when(validator).accept(any(), any());
         when(readTask.getErrorPromptFormatter()).thenReturn(errorPromptFormatter);
 
         when(before.apply(in, out, err, null)).thenReturn(true);
@@ -285,7 +286,7 @@ public class ReadEngineTest {
         verify(extractor, times(2)).extract(any());
         verify(converter, times(2)).convert(any());
         verify(assigner, times(1)).accept(any());
-        verify(validator, times(2)).accept(any());
+        verify(validator, times(2)).accept(any(), any());
         verify(errorPromptFormatter, times(1)).format(any(), any(), eq(e));
 
         verify(after, times(1)).accept(in, out, err, null);
@@ -322,7 +323,7 @@ public class ReadEngineTest {
         verify(extractor, times(2)).extract(any());
         verify(converter, times(1)).convert(any());
         verify(assigner, times(1)).accept(any());
-        verify(validator, times(1)).accept(any());
+        verify(validator, times(1)).accept(any(), any());
         verify(errorPromptFormatter, times(1)).format(any(), any(), any());
 
         verify(after, times(1)).accept(in, out, err, null);
@@ -359,7 +360,7 @@ public class ReadEngineTest {
         verify(extractor, times(2)).extract(any());
         verify(converter, times(2)).convert(any());
         verify(assigner, times(1)).accept(any());
-        verify(validator, times(1)).accept(any());
+        verify(validator, times(1)).accept(any(), any());
         verify(errorPromptFormatter, times(1)).format(any(), any(), any());
 
         verify(after, times(1)).accept(in, out, err, null);

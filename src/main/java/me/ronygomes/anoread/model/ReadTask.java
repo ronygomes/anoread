@@ -11,6 +11,7 @@ import me.ronygomes.anoread.util.function.QuadFunction;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.Serializable;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class ReadTask<T> implements Serializable {
@@ -27,7 +28,7 @@ public class ReadTask<T> implements Serializable {
     private InputExtractor extractor;
     private InputConverter<?> converter;
 
-    private Consumer<Object> validator;
+    private BiConsumer<Object, ReadMeta> validator;
     private Consumer<Object> assigner;
     private ErrorPromptFormatter errorPromptFormatter;
 
@@ -95,11 +96,11 @@ public class ReadTask<T> implements Serializable {
         this.converter = converter;
     }
 
-    public Consumer<Object> getValidator() {
+    public BiConsumer<Object, ReadMeta> getValidator() {
         return validator;
     }
 
-    public void setValidator(Consumer<Object> validator) {
+    public void setValidator(BiConsumer<Object, ReadMeta> validator) {
         this.validator = validator;
     }
 

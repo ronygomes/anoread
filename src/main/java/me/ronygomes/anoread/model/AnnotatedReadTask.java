@@ -8,7 +8,7 @@ import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Objects;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 public class AnnotatedReadTask<T> extends ReadTask<T> {
 
@@ -98,11 +98,11 @@ public class AnnotatedReadTask<T> extends ReadTask<T> {
     }
 
     @Override
-    public Consumer<Object> getValidator() {
+    public BiConsumer<Object, ReadMeta> getValidator() {
         if (Objects.isNull(super.getValidator()) && Objects.nonNull(validationMethod)) {
-            return (value) -> {
+            return (value, readMeta) -> {
                 try {
-                    readEachPre.invoke(target, value);
+                    readEachPre.invoke(target, value, readMeta);
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     e.printStackTrace();
                 }

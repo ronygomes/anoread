@@ -12,8 +12,8 @@ import me.ronygomes.anoread.formatter.ReadPromptFormatter;
 import me.ronygomes.anoread.handler.ReadHandler;
 import me.ronygomes.anoread.model.ReadMeta;
 import me.ronygomes.anoread.processor.ClassLevelEngineComponentProvider;
-import me.ronygomes.anoread.processor.FieldLevelEngineComponentProvider;
 import me.ronygomes.anoread.processor.EngineComponentProvider;
+import me.ronygomes.anoread.processor.FieldLevelEngineComponentProvider;
 
 import java.io.InputStream;
 import java.io.PrintStream;
@@ -206,7 +206,7 @@ public class AnnotationHelper {
 
     public static Method extractValidator(Method[] methods) {
         return findMethodWithAnnotationAndSignature(methods, Validator.class,
-                new Class<?>[]{Object.class},
+                new Class<?>[]{Object.class, ReadMeta.class},
                 void.class);
     }
 }
