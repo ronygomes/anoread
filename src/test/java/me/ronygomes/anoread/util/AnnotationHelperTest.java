@@ -17,7 +17,6 @@ import me.ronygomes.anoread.handler.impl.MultiLineReadHandler;
 import me.ronygomes.anoread.handler.impl.SingleLineReadHandler;
 import me.ronygomes.anoread.model.*;
 import me.ronygomes.anoread.processor.EngineComponentProvider;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
