@@ -11,6 +11,7 @@ import me.ronygomes.anoread.annotation.handler.ReadFixedLine;
 import me.ronygomes.anoread.annotation.handler.ReadMultiLine;
 import me.ronygomes.anoread.annotation.handler.ReadSingleLine;
 import me.ronygomes.anoread.converter.impl.IntegerConverter;
+import me.ronygomes.anoread.converter.impl.StringConverter;
 
 @ReadMultiLine
 @FormatErrorBasic
@@ -44,5 +45,12 @@ public class AnnotationTestModel {
     @FormatPromptBasic
     @ReadAttributes(prompt = "Enter field6", hint = "eg. Dog, Cat")
     private String field6;
+
+    @ReadFixedLine(lineCount = 3)
+    @FormatErrorBasic
+    @FormatPromptBasic
+    @Converter(StringConverter.class)
+    @ExtractDelimiterSeparatedInput
+    private Integer field7;
 
 }

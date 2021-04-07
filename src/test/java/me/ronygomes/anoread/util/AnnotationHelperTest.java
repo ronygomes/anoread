@@ -3,6 +3,7 @@ package me.ronygomes.anoread.util;
 import me.ronygomes.anoread.annotation.ReadEachPre;
 import me.ronygomes.anoread.converter.InputConverter;
 import me.ronygomes.anoread.converter.impl.IntegerConverter;
+import me.ronygomes.anoread.converter.impl.StringConverter;
 import me.ronygomes.anoread.extractor.InputExtractor;
 import me.ronygomes.anoread.extractor.impl.DelimiterSeparatedInputExtractor;
 import me.ronygomes.anoread.extractor.impl.SingleInputExtractor;
@@ -24,6 +25,7 @@ import org.junit.jupiter.api.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -257,6 +259,56 @@ public class AnnotationHelperTest {
 
         c.getExtractor(Integer.class);
         verify(engineComponentProvider, times(1)).getExtractor(Integer.class);
+    }
+
+    @Test
+    void testCreateFieldHookProviderWithEmptyField() {
+        EngineComponentProvider engineComponentProvider = mock(EngineComponentProvider.class);
+        EngineComponentProvider f = createFieldEngineComponentProvider(engineComponentProvider, new Annotation[]{});
+
+        f.getHandler();
+        verify(engineComponentProvider, times(1)).getHandler();
+
+        f.getReadPromptFormatter();
+        verify(engineComponentProvider, times(1)).getReadPromptFormatter();
+
+        f.getErrorPromptFormatter();
+        verify(engineComponentProvider, times(1)).getErrorPromptFormatter();
+
+        f.getAssigner(null, null);
+        verify(engineComponentProvider, times(1)).getAssigner(null, null);
+
+        f.getConverter(Integer.class);
+        verify(engineComponentProvider, times(1)).getConverter(Integer.class);
+
+        f.getExtractor(Integer.class);
+        verify(engineComponentProvider, times(1)).getExtractor(Integer.class);
+    }
+
+    @Test
+    void testCreateFieldHookProviderWithValueField() throws NoSuchFieldException {
+        EngineComponentProvider engineComponentProvider = mock(EngineComponentProvider.class);
+
+        Annotation[] annotations = AnnotationTestModel.class.getDeclaredField("field7").getDeclaredAnnotations();
+        EngineComponentProvider f = createFieldEngineComponentProvider(engineComponentProvider, annotations);
+
+        assertTrue(f.getHandler() instanceof FixedLineReadHandler);
+        verify(engineComponentProvider, times(0)).getHandler();
+
+        assertTrue(f.getReadPromptFormatter() instanceof BasicReadPromptFormatter);
+        verify(engineComponentProvider, times(0)).getReadPromptFormatter();
+
+        assertTrue(f.getErrorPromptFormatter() instanceof BasicErrorPromptFormatter);
+        verify(engineComponentProvider, times(0)).getErrorPromptFormatter();
+
+        f.getAssigner(null, null);
+        verify(engineComponentProvider, times(1)).getAssigner(null, null);
+
+        assertTrue(f.getConverter(Integer.class) instanceof StringConverter);
+        verify(engineComponentProvider, times(0)).getConverter(Integer.class);
+
+        assertTrue(f.getExtractor(String.class) instanceof DelimiterSeparatedInputExtractor);
+        verify(engineComponentProvider, times(0)).getExtractor(Integer.class);
     }
 
     @Test
