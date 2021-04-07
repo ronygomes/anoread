@@ -15,11 +15,9 @@ import me.ronygomes.anoread.handler.ReadHandler;
 import me.ronygomes.anoread.handler.impl.FixedLineReadHandler;
 import me.ronygomes.anoread.handler.impl.MultiLineReadHandler;
 import me.ronygomes.anoread.handler.impl.SingleLineReadHandler;
-import me.ronygomes.anoread.model.AnnotationTestModel;
-import me.ronygomes.anoread.model.MethodTestModel;
-import me.ronygomes.anoread.model.ReadFieldTest;
-import me.ronygomes.anoread.model.ReadMeta;
+import me.ronygomes.anoread.model.*;
 import me.ronygomes.anoread.processor.EngineComponentProvider;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -214,7 +212,7 @@ public class AnnotationHelperTest {
     }
 
     @Test
-    void testCreateClassHookProviderWithEmptyClass() {
+    void testCreateClassEngineComponentProviderWithEmptyClass() {
         EngineComponentProvider engineComponentProvider = mock(EngineComponentProvider.class);
         EngineComponentProvider c = createClassEngineComponentProvider(engineComponentProvider, ReadFieldTest.class.getAnnotations());
 
@@ -238,7 +236,7 @@ public class AnnotationHelperTest {
     }
 
     @Test
-    void testCreateClassHookProviderWithValue() {
+    void testCreateClassEngineComponentProviderWithValue() {
         EngineComponentProvider engineComponentProvider = mock(EngineComponentProvider.class);
         EngineComponentProvider c = createClassEngineComponentProvider(engineComponentProvider, AnnotationTestModel.class.getAnnotations());
 
@@ -262,7 +260,7 @@ public class AnnotationHelperTest {
     }
 
     @Test
-    void testCreateFieldHookProviderWithEmptyField() {
+    void testCreateFieldEngineComponentProviderWithEmptyField() {
         EngineComponentProvider engineComponentProvider = mock(EngineComponentProvider.class);
         EngineComponentProvider f = createFieldEngineComponentProvider(engineComponentProvider, new Annotation[]{});
 
@@ -286,7 +284,7 @@ public class AnnotationHelperTest {
     }
 
     @Test
-    void testCreateFieldHookProviderWithValueField() throws NoSuchFieldException {
+    void testCreateFieldEngineComponentProviderWithValueField() throws NoSuchFieldException {
         EngineComponentProvider engineComponentProvider = mock(EngineComponentProvider.class);
 
         Annotation[] annotations = AnnotationTestModel.class.getDeclaredField("field7").getDeclaredAnnotations();
@@ -389,5 +387,25 @@ public class AnnotationHelperTest {
                 Boolean.class);
 
         assertNull(method);
+    }
+
+    @Test
+    void testCanExtractReadLifeCycleHooks() {
+        Method[] methods = MethodReadLifeCycleHookModel.class.getDeclaredMethods();
+
+        Method method1 = extractReadBegin(methods);
+        assertEquals("method1", method1.getName());
+
+        Method method2 = extractReadEnd(methods);
+        assertEquals("method2", method2.getName());
+
+        Method method3 = extractReadEachPre(methods);
+        assertEquals("method3", method3.getName());
+
+        Method method4 = extractReadEachPost(methods);
+        assertEquals("method4", method4.getName());
+
+        Method method5 = extractValidator(methods);
+        assertEquals("method5", method5.getName());
     }
 }
