@@ -13,10 +13,10 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-public class ClassLevelHookProviderTest {
+public class ClassLevelEngineComponentProviderTest {
 
     @Mock
-    private HookProvider hookProvider;
+    private EngineComponentProvider engineComponentProvider;
 
     @Mock
     private ReadHandler readHandler;
@@ -29,48 +29,48 @@ public class ClassLevelHookProviderTest {
 
     @Test
     void testNullWillCallParentHooks() {
-        HookProvider c = new ClassLevelHookProvider(hookProvider, null, null, null);
+        EngineComponentProvider c = new ClassLevelEngineComponentProvider(engineComponentProvider, null, null, null);
 
         c.getHandler();
-        verify(hookProvider, times(1)).getHandler();
+        verify(engineComponentProvider, times(1)).getHandler();
 
         c.getReadPromptFormatter();
-        verify(hookProvider, times(1)).getReadPromptFormatter();
+        verify(engineComponentProvider, times(1)).getReadPromptFormatter();
 
         c.getErrorPromptFormatter();
-        verify(hookProvider, times(1)).getErrorPromptFormatter();
+        verify(engineComponentProvider, times(1)).getErrorPromptFormatter();
 
         c.getAssigner(null, null);
-        verify(hookProvider, times(1)).getAssigner(null, null);
+        verify(engineComponentProvider, times(1)).getAssigner(null, null);
 
         c.getConverter(Integer.class);
-        verify(hookProvider, times(1)).getConverter(Integer.class);
+        verify(engineComponentProvider, times(1)).getConverter(Integer.class);
 
         c.getExtractor(Integer.class);
-        verify(hookProvider, times(1)).getExtractor(Integer.class);
+        verify(engineComponentProvider, times(1)).getExtractor(Integer.class);
     }
 
     @Test
     void testNonNullHooksWillBeCalled() {
-        HookProvider c = new ClassLevelHookProvider(hookProvider, readHandler,
+        EngineComponentProvider c = new ClassLevelEngineComponentProvider(engineComponentProvider, readHandler,
                 readPromptFormatter, errorPromptFormatter);
 
         assertSame(readHandler, c.getHandler());
-        verify(hookProvider, times(0)).getHandler();
+        verify(engineComponentProvider, times(0)).getHandler();
 
         assertSame(readPromptFormatter, c.getReadPromptFormatter());
-        verify(hookProvider, times(0)).getReadPromptFormatter();
+        verify(engineComponentProvider, times(0)).getReadPromptFormatter();
 
         assertSame(errorPromptFormatter, c.getErrorPromptFormatter());
-        verify(hookProvider, times(0)).getErrorPromptFormatter();
+        verify(engineComponentProvider, times(0)).getErrorPromptFormatter();
 
         c.getAssigner(null, null);
-        verify(hookProvider, times(1)).getAssigner(null, null);
+        verify(engineComponentProvider, times(1)).getAssigner(null, null);
 
         c.getConverter(Integer.class);
-        verify(hookProvider, times(1)).getConverter(Integer.class);
+        verify(engineComponentProvider, times(1)).getConverter(Integer.class);
 
         c.getExtractor(Integer.class);
-        verify(hookProvider, times(1)).getExtractor(Integer.class);
+        verify(engineComponentProvider, times(1)).getExtractor(Integer.class);
     }
 }

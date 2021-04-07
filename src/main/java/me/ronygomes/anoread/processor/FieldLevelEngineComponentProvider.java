@@ -10,9 +10,9 @@ import java.lang.reflect.Field;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public class FieldLevelHookProvider implements HookProvider {
+public class FieldLevelEngineComponentProvider implements EngineComponentProvider {
 
-    private HookProvider parentHookProvider;
+    private EngineComponentProvider parentEngineComponentProvider;
 
     private ReadHandler handler;
     private ReadPromptFormatter readPromptFormatter;
@@ -22,14 +22,14 @@ public class FieldLevelHookProvider implements HookProvider {
 
     private ErrorPromptFormatter errorPromptFormatter;
 
-    public FieldLevelHookProvider(HookProvider parentHookProvider,
-                                  ReadHandler handler,
-                                  ReadPromptFormatter readPromptFormatter,
-                                  InputExtractor extractor,
-                                  InputConverter<?> converter,
-                                  ErrorPromptFormatter errorPromptFormatter) {
+    public FieldLevelEngineComponentProvider(EngineComponentProvider parentEngineComponentProvider,
+                                             ReadHandler handler,
+                                             ReadPromptFormatter readPromptFormatter,
+                                             InputExtractor extractor,
+                                             InputConverter<?> converter,
+                                             ErrorPromptFormatter errorPromptFormatter) {
 
-        this.parentHookProvider = parentHookProvider;
+        this.parentEngineComponentProvider = parentEngineComponentProvider;
         this.handler = handler;
         this.readPromptFormatter = readPromptFormatter;
         this.extractor = extractor;
@@ -40,7 +40,7 @@ public class FieldLevelHookProvider implements HookProvider {
     @Override
     public ReadHandler getHandler() {
         if (Objects.isNull(handler)) {
-            return parentHookProvider.getHandler();
+            return parentEngineComponentProvider.getHandler();
         }
 
         return handler;
@@ -49,7 +49,7 @@ public class FieldLevelHookProvider implements HookProvider {
     @Override
     public ReadPromptFormatter getReadPromptFormatter() {
         if (Objects.isNull(readPromptFormatter)) {
-            return parentHookProvider.getReadPromptFormatter();
+            return parentEngineComponentProvider.getReadPromptFormatter();
         }
 
         return readPromptFormatter;
@@ -58,7 +58,7 @@ public class FieldLevelHookProvider implements HookProvider {
     @Override
     public InputExtractor getExtractor(Class<?> type) {
         if (Objects.isNull(extractor)) {
-            return parentHookProvider.getExtractor(type);
+            return parentEngineComponentProvider.getExtractor(type);
         }
 
         return extractor;
@@ -67,7 +67,7 @@ public class FieldLevelHookProvider implements HookProvider {
     @Override
     public InputConverter<?> getConverter(Class<?> type) {
         if (Objects.isNull(converter)) {
-            return parentHookProvider.getConverter(type);
+            return parentEngineComponentProvider.getConverter(type);
         }
 
         return converter;
@@ -75,13 +75,13 @@ public class FieldLevelHookProvider implements HookProvider {
 
     @Override
     public Consumer<Object> getAssigner(Field field, Object object) {
-        return parentHookProvider.getAssigner(field, object);
+        return parentEngineComponentProvider.getAssigner(field, object);
     }
 
     @Override
     public ErrorPromptFormatter getErrorPromptFormatter() {
         if (Objects.isNull(errorPromptFormatter)) {
-            return parentHookProvider.getErrorPromptFormatter();
+            return parentEngineComponentProvider.getErrorPromptFormatter();
         }
 
         return errorPromptFormatter;

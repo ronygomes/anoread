@@ -10,7 +10,7 @@ import me.ronygomes.anoread.model.ReadTask;
 import java.lang.reflect.Field;
 import java.util.function.Consumer;
 
-public interface HookProvider {
+public interface EngineComponentProvider {
 
     ReadHandler getHandler();
 

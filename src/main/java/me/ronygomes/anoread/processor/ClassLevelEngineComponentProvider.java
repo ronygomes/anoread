@@ -10,19 +10,19 @@ import java.lang.reflect.Field;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public class ClassLevelHookProvider implements HookProvider {
+public class ClassLevelEngineComponentProvider implements EngineComponentProvider {
 
-    private HookProvider parentHookProvider;
+    private EngineComponentProvider parentEngineComponentProvider;
     private ReadHandler handler;
     private ReadPromptFormatter readPromptFormatter;
     private ErrorPromptFormatter errorPromptFormatter;
 
-    public ClassLevelHookProvider(HookProvider parentHookProvider,
-                                  ReadHandler handler,
-                                  ReadPromptFormatter readPromptFormatter,
-                                  ErrorPromptFormatter errorPromptFormatter) {
+    public ClassLevelEngineComponentProvider(EngineComponentProvider parentEngineComponentProvider,
+                                             ReadHandler handler,
+                                             ReadPromptFormatter readPromptFormatter,
+                                             ErrorPromptFormatter errorPromptFormatter) {
 
-        this.parentHookProvider = parentHookProvider;
+        this.parentEngineComponentProvider = parentEngineComponentProvider;
         this.handler = handler;
         this.readPromptFormatter = readPromptFormatter;
         this.errorPromptFormatter = errorPromptFormatter;
@@ -31,7 +31,7 @@ public class ClassLevelHookProvider implements HookProvider {
     @Override
     public ReadHandler getHandler() {
         if (Objects.isNull(handler)) {
-            return parentHookProvider.getHandler();
+            return parentEngineComponentProvider.getHandler();
         }
 
         return handler;
@@ -40,7 +40,7 @@ public class ClassLevelHookProvider implements HookProvider {
     @Override
     public ReadPromptFormatter getReadPromptFormatter() {
         if (Objects.isNull(readPromptFormatter)) {
-            return parentHookProvider.getReadPromptFormatter();
+            return parentEngineComponentProvider.getReadPromptFormatter();
         }
 
         return readPromptFormatter;
@@ -48,23 +48,23 @@ public class ClassLevelHookProvider implements HookProvider {
 
     @Override
     public InputExtractor getExtractor(Class<?> type) {
-        return parentHookProvider.getExtractor(type);
+        return parentEngineComponentProvider.getExtractor(type);
     }
 
     @Override
     public InputConverter<?> getConverter(Class<?> type) {
-        return parentHookProvider.getConverter(type);
+        return parentEngineComponentProvider.getConverter(type);
     }
 
     @Override
     public Consumer<Object> getAssigner(Field field, Object object) {
-        return parentHookProvider.getAssigner(field, object);
+        return parentEngineComponentProvider.getAssigner(field, object);
     }
 
     @Override
     public ErrorPromptFormatter getErrorPromptFormatter() {
         if (Objects.isNull(errorPromptFormatter)) {
-            return parentHookProvider.getErrorPromptFormatter();
+            return parentEngineComponentProvider.getErrorPromptFormatter();
         }
 
         return errorPromptFormatter;

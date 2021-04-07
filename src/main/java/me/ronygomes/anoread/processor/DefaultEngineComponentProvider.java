@@ -14,9 +14,9 @@ import java.lang.reflect.Field;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public class DefaultHookProvider implements HookProvider {
+public class DefaultEngineComponentProvider implements EngineComponentProvider {
 
-    private static HookProvider INSTANCE;
+    private static EngineComponentProvider INSTANCE;
 
     @Override
     public ReadHandler getHandler() {
@@ -55,11 +55,11 @@ public class DefaultHookProvider implements HookProvider {
         return new BasicErrorPromptFormatter(false);
     }
 
-    public static HookProvider getInstance() {
+    public static EngineComponentProvider getInstance() {
         if (INSTANCE == null) {
-            synchronized (DefaultHookProvider.class) {
+            synchronized (DefaultEngineComponentProvider.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = new DefaultHookProvider();
+                    INSTANCE = new DefaultEngineComponentProvider();
                 }
             }
         }

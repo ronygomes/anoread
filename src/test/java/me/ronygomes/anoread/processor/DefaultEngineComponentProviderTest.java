@@ -13,22 +13,22 @@ import org.junit.jupiter.api.Test;
 import java.lang.reflect.Field;
 import java.util.function.Consumer;
 
-import static me.ronygomes.anoread.processor.DefaultHookProvider.getInstance;
+import static me.ronygomes.anoread.processor.DefaultEngineComponentProvider.getInstance;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class DefaultHookProviderTest {
+public class DefaultEngineComponentProviderTest {
 
     @Test
     void testDefaultHookProviderIsSingleton() {
-        HookProvider i1 = getInstance();
-        HookProvider i2 = getInstance();
+        EngineComponentProvider i1 = getInstance();
+        EngineComponentProvider i2 = getInstance();
 
         assertSame(i1, i2);
     }
 
     @Test
     void testDefaultConverterAreSingleton() {
-        HookProvider i1 = getInstance();
+        EngineComponentProvider i1 = getInstance();
 
         InputConverter<?> c1 = i1.getConverter(Integer.class);
         InputConverter<?> c2 = i1.getConverter(Integer.class);
@@ -38,7 +38,7 @@ public class DefaultHookProviderTest {
 
     @Test
     void testDefaultConverters() {
-        HookProvider i1 = getInstance();
+        EngineComponentProvider i1 = getInstance();
 
         assertTrue(i1.getConverter(Integer.class) instanceof IntegerConverter);
         assertTrue(i1.getConverter(String.class) instanceof StringConverter);
@@ -46,8 +46,8 @@ public class DefaultHookProviderTest {
 
     @Test
     void testReturnsSingleInputExtractorIfNothingMatched() {
-        HookProvider i1 = getInstance();
-        assertTrue(i1.getExtractor(DefaultHookProviderTest.class) instanceof SingleInputExtractor);
+        EngineComponentProvider i1 = getInstance();
+        assertTrue(i1.getExtractor(DefaultEngineComponentProviderTest.class) instanceof SingleInputExtractor);
     }
 
     @Test
@@ -72,7 +72,7 @@ public class DefaultHookProviderTest {
         Field name = Person.class.getDeclaredField("name");
         Field age = Person.class.getDeclaredField("age");
 
-        HookProvider i1 = getInstance();
+        EngineComponentProvider i1 = getInstance();
 
         Consumer<Object> nameAssigner = i1.getAssigner(name, p);
         nameAssigner.accept("John");

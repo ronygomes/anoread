@@ -11,9 +11,9 @@ import me.ronygomes.anoread.formatter.ErrorPromptFormatter;
 import me.ronygomes.anoread.formatter.ReadPromptFormatter;
 import me.ronygomes.anoread.handler.ReadHandler;
 import me.ronygomes.anoread.model.ReadMeta;
-import me.ronygomes.anoread.processor.ClassLevelHookProvider;
-import me.ronygomes.anoread.processor.FieldLevelHookProvider;
-import me.ronygomes.anoread.processor.HookProvider;
+import me.ronygomes.anoread.processor.ClassLevelEngineComponentProvider;
+import me.ronygomes.anoread.processor.FieldLevelEngineComponentProvider;
+import me.ronygomes.anoread.processor.EngineComponentProvider;
 
 import java.io.InputStream;
 import java.io.PrintStream;
@@ -150,13 +150,17 @@ public class AnnotationHelper {
         return outFields;
     }
 
-    public static HookProvider createClassHookProvider(HookProvider parent, Annotation[] annotations) {
-        return new ClassLevelHookProvider(parent, extractReadHandler(annotations),
+    public static EngineComponentProvider createClassEngineComponentProvider(EngineComponentProvider parent,
+                                                                             Annotation[] annotations) {
+
+        return new ClassLevelEngineComponentProvider(parent, extractReadHandler(annotations),
                 extractReadPromptFormatter(annotations), extractErrorPromptFormatter(annotations));
     }
 
-    public static HookProvider createFieldHookProvider(HookProvider parent, Annotation[] annotations) {
-        return new FieldLevelHookProvider(parent, extractReadHandler(annotations),
+    public static EngineComponentProvider createFieldEngineComponentProvider(EngineComponentProvider parent,
+                                                                             Annotation[] annotations) {
+
+        return new FieldLevelEngineComponentProvider(parent, extractReadHandler(annotations),
                 extractReadPromptFormatter(annotations), extractInputExtractor(annotations),
                 extractConverter(annotations), extractErrorPromptFormatter(annotations));
     }

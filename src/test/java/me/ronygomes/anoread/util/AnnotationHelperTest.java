@@ -18,7 +18,7 @@ import me.ronygomes.anoread.model.AnnotationTestModel;
 import me.ronygomes.anoread.model.MethodTestModel;
 import me.ronygomes.anoread.model.ReadFieldTest;
 import me.ronygomes.anoread.model.ReadMeta;
-import me.ronygomes.anoread.processor.HookProvider;
+import me.ronygomes.anoread.processor.EngineComponentProvider;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -208,50 +208,50 @@ public class AnnotationHelperTest {
 
     @Test
     void testCreateClassHookProviderWithEmptyClass() {
-        HookProvider hookProvider = mock(HookProvider.class);
-        HookProvider c = createClassHookProvider(hookProvider, ReadFieldTest.class.getAnnotations());
+        EngineComponentProvider engineComponentProvider = mock(EngineComponentProvider.class);
+        EngineComponentProvider c = createClassEngineComponentProvider(engineComponentProvider, ReadFieldTest.class.getAnnotations());
 
         c.getHandler();
-        verify(hookProvider, times(1)).getHandler();
+        verify(engineComponentProvider, times(1)).getHandler();
 
         c.getReadPromptFormatter();
-        verify(hookProvider, times(1)).getReadPromptFormatter();
+        verify(engineComponentProvider, times(1)).getReadPromptFormatter();
 
         c.getErrorPromptFormatter();
-        verify(hookProvider, times(1)).getErrorPromptFormatter();
+        verify(engineComponentProvider, times(1)).getErrorPromptFormatter();
 
         c.getAssigner(null, null);
-        verify(hookProvider, times(1)).getAssigner(null, null);
+        verify(engineComponentProvider, times(1)).getAssigner(null, null);
 
         c.getConverter(Integer.class);
-        verify(hookProvider, times(1)).getConverter(Integer.class);
+        verify(engineComponentProvider, times(1)).getConverter(Integer.class);
 
         c.getExtractor(Integer.class);
-        verify(hookProvider, times(1)).getExtractor(Integer.class);
+        verify(engineComponentProvider, times(1)).getExtractor(Integer.class);
     }
 
     @Test
     void testCreateClassHookProviderWithValue() {
-        HookProvider hookProvider = mock(HookProvider.class);
-        HookProvider c = createClassHookProvider(hookProvider, AnnotationTestModel.class.getAnnotations());
+        EngineComponentProvider engineComponentProvider = mock(EngineComponentProvider.class);
+        EngineComponentProvider c = createClassEngineComponentProvider(engineComponentProvider, AnnotationTestModel.class.getAnnotations());
 
         assertTrue(c.getHandler() instanceof MultiLineReadHandler);
-        verify(hookProvider, times(0)).getHandler();
+        verify(engineComponentProvider, times(0)).getHandler();
 
         assertTrue(c.getReadPromptFormatter() instanceof BasicReadPromptFormatter);
-        verify(hookProvider, times(0)).getReadPromptFormatter();
+        verify(engineComponentProvider, times(0)).getReadPromptFormatter();
 
         assertTrue(c.getErrorPromptFormatter() instanceof BasicErrorPromptFormatter);
-        verify(hookProvider, times(0)).getErrorPromptFormatter();
+        verify(engineComponentProvider, times(0)).getErrorPromptFormatter();
 
         c.getAssigner(null, null);
-        verify(hookProvider, times(1)).getAssigner(null, null);
+        verify(engineComponentProvider, times(1)).getAssigner(null, null);
 
         c.getConverter(Integer.class);
-        verify(hookProvider, times(1)).getConverter(Integer.class);
+        verify(engineComponentProvider, times(1)).getConverter(Integer.class);
 
         c.getExtractor(Integer.class);
-        verify(hookProvider, times(1)).getExtractor(Integer.class);
+        verify(engineComponentProvider, times(1)).getExtractor(Integer.class);
     }
 
     @Test

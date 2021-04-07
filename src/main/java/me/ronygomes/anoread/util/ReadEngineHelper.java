@@ -1,7 +1,7 @@
 package me.ronygomes.anoread.util;
 
 import me.ronygomes.anoread.model.*;
-import me.ronygomes.anoread.processor.HookProvider;
+import me.ronygomes.anoread.processor.EngineComponentProvider;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -14,19 +14,19 @@ public class ReadEngineHelper {
 
     public static ReadEngineCmd make(Object target, List<Field> fields,
                                      ReadLifeCycleHookHolder holder,
-                                     HookProvider parentHookProvider) {
+                                     EngineComponentProvider parentEngineComponentProvider) {
 
         Method[] methods = target.getClass().getDeclaredMethods();
         ReadEngineCmd cmd = new AnnotatedReadEngineCmd(target, holder,
                 extractReadBegin(methods), extractReadEnd(methods));
 
-        HookProvider classLevelHookProvider = createClassHookProvider(parentHookProvider,
+        EngineComponentProvider classLevelEngineComponentProvider = createClassEngineComponentProvider(parentEngineComponentProvider,
                 target.getClass().getAnnotations());
 
         List<ReadTask<?>> tasks = new ArrayList<>();
 
         for (Field field : fields) {
-            tasks.add(createAnnotatedReadTask(target, field, holder, classLevelHookProvider));
+            tasks.add(createAnnotatedReadTask(target, field, holder, classLevelEngineComponentProvider));
         }
 
         cmd.setTasks(tasks);
@@ -35,16 +35,16 @@ public class ReadEngineHelper {
 
     public static ReadTask<?> createAnnotatedReadTask(Object target, Field field,
                                                       ReadLifeCycleHookHolder holder,
-                                                      HookProvider classLevelHookProvider) {
+                                                      EngineComponentProvider classLevelEngineComponentProvider) {
 
         Method[] methods = target.getClass().getDeclaredMethods();
         ReadTask<?> task = new AnnotatedReadTask<>(target, holder, extractReadEachPre(methods),
                 extractReadEachPost(methods), extractValidator(methods));
 
-        HookProvider fieldHookProvider = createFieldHookProvider(classLevelHookProvider,
+        EngineComponentProvider fieldEngineComponentProvider = createFieldEngineComponentProvider(classLevelEngineComponentProvider,
                 field.getDeclaredAnnotations());
 
-        fieldHookProvider.updateTask(target, field, task);
+        fieldEngineComponentProvider.updateTask(target, field, task);
         return task;
     }
 }
