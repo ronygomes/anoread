@@ -42,7 +42,7 @@ public class AnnotationTestModel {
     private String field5;
 
     @FormatPromptBasic
-    @ReadAttributes(prompt = "Enter field6: ", hint = "eg. Dog, Cat")
+    @ReadAttributes(prompt = "Enter field6", hint = "eg. Dog, Cat")
     private String field6;
 
 }

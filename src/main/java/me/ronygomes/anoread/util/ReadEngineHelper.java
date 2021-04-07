@@ -38,8 +38,10 @@ public class ReadEngineHelper {
                                                       EngineComponentProvider classLevelEngineComponentProvider) {
 
         Method[] methods = target.getClass().getDeclaredMethods();
+
         ReadTask<?> task = new AnnotatedReadTask<>(target, holder, extractReadEachPre(methods),
                 extractReadEachPost(methods), extractValidator(methods));
+        task.setMeta(createMeta(field));
 
         EngineComponentProvider fieldEngineComponentProvider = createFieldEngineComponentProvider(classLevelEngineComponentProvider,
                 field.getDeclaredAnnotations());

@@ -113,11 +113,12 @@ public class AnnotationHelper {
 
         ReadAttributes ra = field.getAnnotation(ReadAttributes.class);
 
+        String fieldName = field.getName();
         if (Objects.nonNull(ra)) {
-            return new ReadMeta(field.getName(), ra.prompt(), ra.hint());
+            return new ReadMeta(fieldName, ra.prompt(), ra.hint());
+        } else {
+            return new ReadMeta(fieldName, String.format("Enter %s", fieldName), null);
         }
-
-        return null;
     }
 
     public static List<Field> getOrderedReadFields(Field[] fields) {

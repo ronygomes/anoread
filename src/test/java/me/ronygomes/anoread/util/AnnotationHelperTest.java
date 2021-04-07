@@ -130,7 +130,12 @@ public class AnnotationHelperTest {
     @Test
     void testReadMetaWhenAbsent() throws NoSuchFieldException {
         Field field0 = AnnotationTestModel.class.getDeclaredField("field0");
-        assertNull(createMeta(field0));
+        ReadMeta meta = createMeta(field0);
+
+        assertNotNull(meta);
+        assertEquals("field0", meta.getName());
+        assertEquals("Enter field0", meta.getPrompt());
+        assertNull(meta.getHint());
     }
 
     @Test
@@ -140,7 +145,7 @@ public class AnnotationHelperTest {
 
         assertNotNull(meta);
         assertEquals("field6", meta.getName());
-        assertEquals("Enter field6: ", meta.getPrompt());
+        assertEquals("Enter field6", meta.getPrompt());
         assertEquals("eg. Dog, Cat", meta.getHint());
     }
 

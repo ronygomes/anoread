@@ -30,5 +30,6 @@ public interface EngineComponentProvider {
         task.setExtractor(getExtractor(field.getType()));
         task.setConverter(getConverter(field.getType()));
         task.setAssigner(getAssigner(field, target));
+        task.setErrorPromptFormatter(getErrorPromptFormatter());
     }
 }
