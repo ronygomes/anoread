@@ -40,3 +40,7 @@ String method(ReadMeta meta, String other) {
     return "Something";
 }
 ```
+
+[ ] Add CI/CD tool
+[ ] Add Java Doc and Author Info
+[ ] Add jar as GitHub Artifact
