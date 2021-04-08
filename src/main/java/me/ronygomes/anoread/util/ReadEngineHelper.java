@@ -20,8 +20,8 @@ public class ReadEngineHelper {
         ReadEngineCmd cmd = new AnnotatedReadEngineCmd(target, holder,
                 extractReadBegin(methods), extractReadEnd(methods));
 
-        EngineComponentProvider classLevelEngineComponentProvider = createClassEngineComponentProvider(parentEngineComponentProvider,
-                target.getClass().getAnnotations());
+        EngineComponentProvider classLevelEngineComponentProvider =
+                createClassEngineComponentProvider(parentEngineComponentProvider, target.getClass().getAnnotations());
 
         List<ReadTask<?>> tasks = new ArrayList<>();
 
@@ -43,8 +43,8 @@ public class ReadEngineHelper {
                 extractReadEachPost(methods), extractValidator(methods));
         task.setMeta(createMeta(field));
 
-        EngineComponentProvider fieldEngineComponentProvider = createFieldEngineComponentProvider(classLevelEngineComponentProvider,
-                field.getDeclaredAnnotations());
+        EngineComponentProvider fieldEngineComponentProvider =
+                createFieldEngineComponentProvider(classLevelEngineComponentProvider, field.getDeclaredAnnotations());
 
         fieldEngineComponentProvider.updateTask(target, field, task);
         return task;
