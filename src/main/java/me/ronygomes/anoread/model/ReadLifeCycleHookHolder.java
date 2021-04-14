@@ -20,6 +20,13 @@ public class ReadLifeCycleHookHolder {
     public ReadLifeCycleHookHolder() {
     }
 
+    public ReadLifeCycleHookHolder(TriConsumer<InputStream, PrintStream, PrintStream> readBegin,
+                                   TriConsumer<InputStream, PrintStream, PrintStream> readEnd) {
+
+        this.readBegin = readBegin;
+        this.readEnd = readEnd;
+    }
+
     public ReadLifeCycleHookHolder(QuadFunction<InputStream, PrintStream, PrintStream, ReadMeta, Boolean> readEachPre,
                                    QuadConsumer<InputStream, PrintStream, PrintStream, ReadMeta> readEachPost,
                                    BiConsumer<Object, ReadMeta> validator) {

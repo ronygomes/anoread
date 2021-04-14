@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Objects;
 
 public class AnnotatedReadEngineCmd extends ReadEngineCmd {
@@ -65,6 +66,9 @@ public class AnnotatedReadEngineCmd extends ReadEngineCmd {
         if (Objects.isNull(superConsumer) && Objects.nonNull(method)) {
             return (in, out, err) -> {
                 try {
+                    if (Modifier.isPrivate(method.getModifiers())) {
+                        method.setAccessible(true);
+                    }
                     method.invoke(target, in, out, err);
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     e.printStackTrace();

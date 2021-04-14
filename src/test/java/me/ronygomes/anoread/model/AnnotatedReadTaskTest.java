@@ -1,8 +1,5 @@
 package me.ronygomes.anoread.model;
 
-import me.ronygomes.anoread.annotation.ReadEachPost;
-import me.ronygomes.anoread.annotation.ReadEachPre;
-import me.ronygomes.anoread.annotation.Validator;
 import me.ronygomes.anoread.util.function.QuadConsumer;
 import me.ronygomes.anoread.util.function.QuadFunction;
 import org.junit.jupiter.api.Test;
@@ -126,7 +123,6 @@ public class AnnotatedReadTaskTest {
         assertEquals("4", meta.getHint());
     }
 
-    @ReadEachPre
     private boolean method1(InputStream in, PrintStream out, PrintStream err, ReadMeta meta) {
         out.print("1-1");
         err.print("1-2");
@@ -134,13 +130,11 @@ public class AnnotatedReadTaskTest {
         return false;
     }
 
-    @ReadEachPost
     private void method2(InputStream in, PrintStream out, PrintStream err, ReadMeta meta) {
         out.print("2-1");
         err.print("2-2");
     }
 
-    @Validator
     private void method3(Object object, ReadMeta meta) {
         meta.setHint("4");
     }
