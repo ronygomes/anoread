@@ -25,8 +25,17 @@ public class ReadEngineHelper {
 
         List<ReadTask<?>> tasks = new ArrayList<>();
 
+        Method readEachPre = extractReadEachPre(methods);
+        Method readEachPost = extractReadEachPost(methods);
+        Method validator = extractValidator(methods);
+
         for (Field field : fields) {
-            tasks.add(createAnnotatedReadTask(target, field, holder, classLevelEngineComponentProvider));
+            EngineComponentProvider fieldEngineComponentProvider = createFieldEngineComponentProvider(
+                    classLevelEngineComponentProvider, field.getDeclaredAnnotations());
+
+            tasks.add(createAnnotatedReadTask(target, field, holder, createMeta(field),
+                    readEachPre, readEachPost, validator,
+                    fieldEngineComponentProvider));
         }
 
         cmd.setTasks(tasks);
@@ -35,17 +44,13 @@ public class ReadEngineHelper {
 
     public static ReadTask<?> createAnnotatedReadTask(Object target, Field field,
                                                       ReadLifeCycleHookHolder holder,
-                                                      EngineComponentProvider classLevelEngineComponentProvider) {
+                                                      ReadMeta meta,
+                                                      Method readEachPre,
+                                                      Method readEachPost,
+                                                      Method validatorMethod,
+                                                      EngineComponentProvider fieldEngineComponentProvider) {
 
-        Method[] methods = target.getClass().getDeclaredMethods();
-
-        ReadTask<?> task = new AnnotatedReadTask<>(target, holder, extractReadEachPre(methods),
-                extractReadEachPost(methods), extractValidator(methods));
-        task.setMeta(createMeta(field));
-
-        EngineComponentProvider fieldEngineComponentProvider =
-                createFieldEngineComponentProvider(classLevelEngineComponentProvider, field.getDeclaredAnnotations());
-
+        ReadTask<?> task = new AnnotatedReadTask<>(target, holder, meta, readEachPre, readEachPost, validatorMethod);
         fieldEngineComponentProvider.updateTask(target, field, task);
         return task;
     }

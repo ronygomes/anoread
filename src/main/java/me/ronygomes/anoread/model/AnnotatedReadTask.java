@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 
@@ -19,13 +20,14 @@ public class AnnotatedReadTask<T> extends ReadTask<T> {
 
     private Method validationMethod;
 
-    public AnnotatedReadTask(Object target, ReadLifeCycleHookHolder holder,
+    public AnnotatedReadTask(Object target, ReadLifeCycleHookHolder holder, ReadMeta meta,
                              Method readEachPre, Method readEachPost, Method validationMethod) {
 
         this.target = target;
         setBefore(holder.getReadEachPre());
         setAfter(holder.getReadEachPost());
         setValidator(holder.getValidator());
+        setMeta(meta);
 
         this.readEachPre = readEachPre;
         this.readEachPost = readEachPost;
@@ -71,6 +73,9 @@ public class AnnotatedReadTask<T> extends ReadTask<T> {
             return (in, out, err, meta) -> {
                 Object result = null;
                 try {
+                    if (Modifier.isPrivate(readEachPre.getModifiers())) {
+                        readEachPre.setAccessible(true);
+                    }
                     result = readEachPre.invoke(target, in, out, err, meta);
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     e.printStackTrace();
@@ -87,7 +92,10 @@ public class AnnotatedReadTask<T> extends ReadTask<T> {
         if (Objects.isNull(super.getAfter()) && Objects.nonNull(readEachPost)) {
             return (in, out, err, meta) -> {
                 try {
-                    readEachPre.invoke(target, in, out, err, meta);
+                    if (Modifier.isPrivate(readEachPost.getModifiers())) {
+                        readEachPost.setAccessible(true);
+                    }
+                    readEachPost.invoke(target, in, out, err, meta);
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     e.printStackTrace();
                 }
@@ -102,7 +110,10 @@ public class AnnotatedReadTask<T> extends ReadTask<T> {
         if (Objects.isNull(super.getValidator()) && Objects.nonNull(validationMethod)) {
             return (value, readMeta) -> {
                 try {
-                    readEachPre.invoke(target, value, readMeta);
+                    if (Modifier.isPrivate(validationMethod.getModifiers())) {
+                        validationMethod.setAccessible(true);
+                    }
+                    validationMethod.invoke(target, value, readMeta);
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     e.printStackTrace();
                 }
