@@ -42,7 +42,8 @@ public class ReadEngineHelper {
         return cmd;
     }
 
-    public static ReadTask<?> createAnnotatedReadTask(Object target, Field field,
+    public static ReadTask<?> createAnnotatedReadTask(Object target,
+                                                      Field field,
                                                       ReadLifeCycleHookHolder holder,
                                                       ReadMeta meta,
                                                       Method readEachPre,

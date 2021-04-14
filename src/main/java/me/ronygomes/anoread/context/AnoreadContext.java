@@ -16,6 +16,7 @@ public class AnoreadContext {
     private static final Map<Class<?>, InputExtractor> EXTRACTOR = new HashMap<>();
 
     static {
+        CONVERTER.put(int.class, new IntegerConverter());
         CONVERTER.put(Integer.class, new IntegerConverter());
         CONVERTER.put(String.class, new StringConverter());
     }

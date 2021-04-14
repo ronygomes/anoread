@@ -39,7 +39,7 @@ public class AnnotatedReadEngineCmdTest {
                 }
         );
 
-        Method method = AnnotatedReadEngineCmdTest.class.getDeclaredMethod("method1",
+        Method method = Person.class.getDeclaredMethod("method0",
                 InputStream.class, PrintStream.class, PrintStream.class);
 
         AnnotatedReadEngineCmd cmd = new AnnotatedReadEngineCmd(target, holder, method, method);
@@ -51,10 +51,10 @@ public class AnnotatedReadEngineCmdTest {
 
     @Test
     void testAnnotatedReadEngineCmdReadsFromMethosWhenHolderIsNull() throws NoSuchMethodException {
-        Object target = new AnnotatedReadEngineCmdTest();
+        Object target = new Person();
         ReadLifeCycleHookHolder holder = new ReadLifeCycleHookHolder();
 
-        Method method = AnnotatedReadEngineCmdTest.class.getDeclaredMethod("method1",
+        Method method = Person.class.getDeclaredMethod("method0",
                 InputStream.class, PrintStream.class, PrintStream.class);
 
         AnnotatedReadEngineCmd cmd = new AnnotatedReadEngineCmd(target, holder, method, method);
@@ -74,20 +74,14 @@ public class AnnotatedReadEngineCmdTest {
         PrintStream err = new PrintStream(e);
 
         beginConsumer.accept(null, out, err);
-        assertEquals("1-1", o.toString());
-        assertEquals("1-2", e.toString());
+        assertEquals("0-1", o.toString());
+        assertEquals("0-2", e.toString());
 
         o.reset();
         e.reset();
 
         endConsumer.accept(null, out, err);
-        assertEquals("1-1", o.toString());
-        assertEquals("1-2", e.toString());
-
-    }
-
-    private void method1(InputStream in, PrintStream out, PrintStream err) {
-        out.print("1-1");
-        err.print("1-2");
+        assertEquals("0-1", o.toString());
+        assertEquals("0-2", e.toString());
     }
 }

@@ -8,7 +8,7 @@ public class AnoreadContextTest {
 
     @Test
     void testDefaultConverters() {
-        assertEquals(2, AnoreadContext.converterCount());
+        assertEquals(3, AnoreadContext.converterCount());
     }
 
     @Test
