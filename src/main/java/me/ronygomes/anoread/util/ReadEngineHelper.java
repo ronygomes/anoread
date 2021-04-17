@@ -51,7 +51,7 @@ public class ReadEngineHelper {
                                                    Method validatorMethod,
                                                    EngineComponentProvider fieldEngineComponentProvider) {
 
-        ReadTask task = new AnnotatedReadTask(target, holder, meta, readEachPre, readEachPost, validatorMethod);
+        ReadTask task = new AnnotatedReadTask(target, field, holder, meta, readEachPre, readEachPost, validatorMethod);
         fieldEngineComponentProvider.updateTask(target, field, task);
         return task;
     }

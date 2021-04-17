@@ -8,11 +8,67 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AnnotatedReadTaskTest {
+
+    private String field0;
+
+    private List<String> field1;
+
+    private Map<String, Integer> field2;
+
+    @Test
+    void testGetPayloadReturnsExistingPayload() {
+        AnnotatedReadTask task = new AnnotatedReadTask();
+        ConversionPayload payload = new ConversionPayload();
+        task.setPayload(payload);
+
+        assertSame(payload, task.getPayload());
+    }
+
+    @Test
+    void testGetPayloadReturnsCorrectDataForNotGenericData() throws NoSuchFieldException {
+        AnnotatedReadTask task = new AnnotatedReadTask();
+        task.setField(AnnotatedReadTaskTest.class.getDeclaredField("field0"));
+
+        ConversionPayload payload = task.getPayload();
+
+        assertSame(String.class, payload.getPropertyType());
+        assertEquals(0, payload.getPropertySubTypes().length);
+        assertEquals(0, payload.getExtras().size());
+    }
+
+    @Test
+    void testGetPayloadReturnsCorrectDataForSingleGenericData() throws NoSuchFieldException {
+        AnnotatedReadTask task = new AnnotatedReadTask();
+        task.setField(AnnotatedReadTaskTest.class.getDeclaredField("field1"));
+
+        ConversionPayload payload = task.getPayload();
+
+        assertSame(List.class, payload.getPropertyType());
+        assertEquals(1, payload.getPropertySubTypes().length);
+        assertSame(String.class, payload.getPropertySubTypes()[0]);
+        assertEquals(0, payload.getExtras().size());
+    }
+
+    @Test
+    void testGetPayloadReturnsCorrectDataForMultiGenericData() throws NoSuchFieldException {
+        AnnotatedReadTask task = new AnnotatedReadTask();
+        task.setField(AnnotatedReadTaskTest.class.getDeclaredField("field2"));
+
+        ConversionPayload payload = task.getPayload();
+
+        assertSame(Map.class, payload.getPropertyType());
+        assertEquals(2, payload.getPropertySubTypes().length);
+        assertSame(String.class, payload.getPropertySubTypes()[0]);
+        assertSame(Integer.class, payload.getPropertySubTypes()[1]);
+        assertEquals(0, payload.getExtras().size());
+    }
 
     @Test
     void testAnnotatedReadTaskReadsFromNonNullHolderWhenMethodsAreNull() {
@@ -27,7 +83,7 @@ public class AnnotatedReadTaskTest {
                 }
         );
 
-        AnnotatedReadTask task = new AnnotatedReadTask(target, holder, meta, null, null, null);
+        AnnotatedReadTask task = new AnnotatedReadTask(target, null, holder, meta, null, null, null);
 
         assertSame(target, task.getTarget());
         assertSame(meta, task.getMeta());
@@ -58,7 +114,7 @@ public class AnnotatedReadTaskTest {
 
         Method method3 = AnnotatedReadTaskTest.class.getDeclaredMethod("method3", Object.class, ReadMeta.class);
 
-        AnnotatedReadTask task = new AnnotatedReadTask(target, holder, meta, method1, method2, method3);
+        AnnotatedReadTask task = new AnnotatedReadTask(target, null, holder, meta, method1, method2, method3);
 
         assertSame(target, task.getTarget());
         assertSame(meta, task.getMeta());
@@ -83,7 +139,7 @@ public class AnnotatedReadTaskTest {
 
         Method method3 = AnnotatedReadTaskTest.class.getDeclaredMethod("method3", Object.class, ReadMeta.class);
 
-        AnnotatedReadTask task = new AnnotatedReadTask(target, holder, meta, method1, method2, method3);
+        AnnotatedReadTask task = new AnnotatedReadTask(target, null, holder, meta, method1, method2, method3);
 
         QuadFunction<InputStream, PrintStream, PrintStream, ReadMeta, Boolean> readEachPre = task.getBefore();
         QuadConsumer<InputStream, PrintStream, PrintStream, ReadMeta> readEachPost = task.getAfter();

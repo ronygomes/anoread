@@ -5,25 +5,30 @@ import me.ronygomes.anoread.util.function.QuadFunction;
 
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 import java.util.Objects;
 import java.util.function.BiConsumer;
+
+import static java.util.Arrays.copyOf;
 
 public class AnnotatedReadTask extends ReadTask {
 
     private Object target;
+    private Field field;
 
     private Method readEachPre;
     private Method readEachPost;
 
     private Method validationMethod;
 
-    public AnnotatedReadTask(Object target, ReadLifeCycleHookHolder holder, ReadMeta meta,
+    public AnnotatedReadTask() {
+    }
+
+    public AnnotatedReadTask(Object target, Field field, ReadLifeCycleHookHolder holder, ReadMeta meta,
                              Method readEachPre, Method readEachPost, Method validationMethod) {
 
         this.target = target;
+        this.field = field;
         setBefore(holder.getReadEachPre());
         setAfter(holder.getReadEachPost());
         setValidator(holder.getValidator());
@@ -40,6 +45,14 @@ public class AnnotatedReadTask extends ReadTask {
 
     public void setTarget(Object target) {
         this.target = target;
+    }
+
+    public Field getField() {
+        return field;
+    }
+
+    public void setField(Field field) {
+        this.field = field;
     }
 
     public Method getReadEachPre() {
@@ -64,6 +77,26 @@ public class AnnotatedReadTask extends ReadTask {
 
     public void setValidationMethod(Method validationMethod) {
         this.validationMethod = validationMethod;
+    }
+
+    @Override
+    public ConversionPayload getPayload() {
+        if (Objects.isNull(super.getPayload())) {
+            ConversionPayload payload = new ConversionPayload();
+            payload.setPropertyType(field.getType());
+
+            Type type = field.getGenericType();
+            if (type instanceof ParameterizedType) {
+                ParameterizedType parameterizedType = (ParameterizedType) type;
+
+                Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
+                payload.setPropertySubTypes(copyOf(actualTypeArguments, actualTypeArguments.length, Class[].class));
+            }
+
+            setPayload(payload);
+        }
+
+        return super.getPayload();
     }
 
     @Override
