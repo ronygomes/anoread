@@ -22,6 +22,9 @@ public class AnnotatedReadTaskTest {
 
     private Map<String, Integer> field2;
 
+    private List field3;
+
+
     @Test
     void testGetPayloadReturnsExistingPayload() {
         AnnotatedReadTask task = new AnnotatedReadTask();
@@ -67,6 +70,18 @@ public class AnnotatedReadTaskTest {
         assertEquals(2, payload.getPropertySubTypes().length);
         assertSame(String.class, payload.getPropertySubTypes()[0]);
         assertSame(Integer.class, payload.getPropertySubTypes()[1]);
+        assertEquals(0, payload.getExtras().size());
+    }
+
+    @Test
+    void testGetPayloadReturnsCorrectDataForSingleNonGenericData() throws NoSuchFieldException {
+        AnnotatedReadTask task = new AnnotatedReadTask();
+        task.setField(AnnotatedReadTaskTest.class.getDeclaredField("field3"));
+
+        ConversionPayload payload = task.getPayload();
+
+        assertSame(List.class, payload.getPropertyType());
+        assertEquals(0, payload.getPropertySubTypes().length);
         assertEquals(0, payload.getExtras().size());
     }
 
