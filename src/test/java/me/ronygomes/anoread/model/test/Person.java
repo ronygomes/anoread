@@ -1,9 +1,10 @@
-package me.ronygomes.anoread.model;
+package me.ronygomes.anoread.model.test;
 
 import me.ronygomes.anoread.annotation.*;
 import me.ronygomes.anoread.annotation.extractor.ExtractDelimiterSeparatedInput;
 import me.ronygomes.anoread.annotation.handler.ReadFixedLine;
 import me.ronygomes.anoread.annotation.handler.ReadMultiLine;
+import me.ronygomes.anoread.model.ReadMeta;
 
 import java.io.InputStream;
 import java.io.PrintStream;

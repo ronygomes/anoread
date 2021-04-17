@@ -1,4 +1,4 @@
-package me.ronygomes.anoread.model;
+package me.ronygomes.anoread.model.test;
 
 import me.ronygomes.anoread.annotation.ReadField;
 

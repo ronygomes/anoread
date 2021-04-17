@@ -7,7 +7,7 @@ import me.ronygomes.anoread.extractor.impl.SingleInputExtractor;
 import me.ronygomes.anoread.formatter.impl.BasicErrorPromptFormatter;
 import me.ronygomes.anoread.formatter.impl.BasicReadPromptFormatter;
 import me.ronygomes.anoread.handler.impl.SingleLineReadHandler;
-import me.ronygomes.anoread.model.Person;
+import me.ronygomes.anoread.model.test.Person;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;

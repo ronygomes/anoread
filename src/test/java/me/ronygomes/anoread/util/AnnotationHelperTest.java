@@ -15,7 +15,11 @@ import me.ronygomes.anoread.handler.ReadHandler;
 import me.ronygomes.anoread.handler.impl.FixedLineReadHandler;
 import me.ronygomes.anoread.handler.impl.MultiLineReadHandler;
 import me.ronygomes.anoread.handler.impl.SingleLineReadHandler;
-import me.ronygomes.anoread.model.*;
+import me.ronygomes.anoread.model.MethodTestModel;
+import me.ronygomes.anoread.model.ReadMeta;
+import me.ronygomes.anoread.model.test.AnnotationTestModel;
+import me.ronygomes.anoread.model.test.MethodReadLifeCycleHookModel;
+import me.ronygomes.anoread.model.test.ReadFieldTest;
 import me.ronygomes.anoread.processor.EngineComponentProvider;
 import org.junit.jupiter.api.Test;
 

@@ -1,6 +1,7 @@
-package me.ronygomes.anoread.model;
+package me.ronygomes.anoread.model.test;
 
 import me.ronygomes.anoread.annotation.*;
+import me.ronygomes.anoread.model.ReadMeta;
 
 import java.io.InputStream;
 import java.io.PrintStream;

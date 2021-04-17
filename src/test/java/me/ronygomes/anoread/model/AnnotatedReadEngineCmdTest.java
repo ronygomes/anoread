@@ -1,5 +1,6 @@
 package me.ronygomes.anoread.model;
 
+import me.ronygomes.anoread.model.test.Person;
 import me.ronygomes.anoread.util.function.TriConsumer;
 import org.junit.jupiter.api.Test;
 
