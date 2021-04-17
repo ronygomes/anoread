@@ -19,11 +19,11 @@ public class StringConverterTest {
 
         InputConverter<String> ic = new StringConverter();
 
-        assertThrows(IllegalStateException.class, () -> ic.convert(INPUT0));
-        assertThrows(IllegalStateException.class, () -> ic.convert(INPUT1));
+        assertThrows(IllegalStateException.class, () -> ic.convert(INPUT0, null));
+        assertThrows(IllegalStateException.class, () -> ic.convert(INPUT1, null));
 
-        assertEquals("", ic.convert(INPUT2));
-        assertEquals(" ", ic.convert(INPUT3));
-        assertEquals(" data ", ic.convert(INPUT4));
+        assertEquals("", ic.convert(INPUT2, null));
+        assertEquals(" ", ic.convert(INPUT3, null));
+        assertEquals(" data ", ic.convert(INPUT4, null));
     }
 }

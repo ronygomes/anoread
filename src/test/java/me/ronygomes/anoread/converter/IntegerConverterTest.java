@@ -24,26 +24,26 @@ public class IntegerConverterTest {
     void testIntegerConverter() {
         InputConverter<Integer> ic = new IntegerConverter();
 
-        assertThrows(IllegalStateException.class, () -> ic.convert(INPUT0));
-        assertThrows(IllegalStateException.class, () -> ic.convert(INPUT1));
+        assertThrows(IllegalStateException.class, () -> ic.convert(INPUT0, null));
+        assertThrows(IllegalStateException.class, () -> ic.convert(INPUT1, null));
 
-        ConversionException ce2 = assertThrows(ConversionException.class, () -> ic.convert(INPUT2));
+        ConversionException ce2 = assertThrows(ConversionException.class, () -> ic.convert(INPUT2, null));
         assertEquals("Invalid java.lang.Integer: ", ce2.getDisplayMessage());
 
-        ConversionException ce3 = assertThrows(ConversionException.class, () -> ic.convert(INPUT3));
+        ConversionException ce3 = assertThrows(ConversionException.class, () -> ic.convert(INPUT3, null));
         assertEquals("Invalid java.lang.Integer:  ", ce3.getDisplayMessage());
 
-        ConversionException ce4 = assertThrows(ConversionException.class, () -> ic.convert(INPUT4));
+        ConversionException ce4 = assertThrows(ConversionException.class, () -> ic.convert(INPUT4, null));
         assertEquals("Invalid java.lang.Integer:  3 ", ce4.getDisplayMessage());
 
-        assertEquals(1000, ic.convert(INPUT5));
-        assertEquals(-1000, ic.convert(INPUT6));
-        assertEquals(0, ic.convert(INPUT7));
+        assertEquals(1000, ic.convert(INPUT5, null));
+        assertEquals(-1000, ic.convert(INPUT6, null));
+        assertEquals(0, ic.convert(INPUT7, null));
 
-        ConversionException ce8 = assertThrows(ConversionException.class, () -> ic.convert(INPUT8));
+        ConversionException ce8 = assertThrows(ConversionException.class, () -> ic.convert(INPUT8, null));
         assertEquals("Invalid java.lang.Integer: 99999999999999999999999999", ce8.getDisplayMessage());
 
-        ConversionException ce9 = assertThrows(ConversionException.class, () -> ic.convert(INPUT9));
+        ConversionException ce9 = assertThrows(ConversionException.class, () -> ic.convert(INPUT9, null));
         assertEquals("Invalid java.lang.Integer: invalid", ce9.getDisplayMessage());
     }
 }

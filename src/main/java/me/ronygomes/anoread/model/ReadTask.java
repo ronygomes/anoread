@@ -16,7 +16,6 @@ import java.util.function.Consumer;
 
 public class ReadTask<T> implements Serializable {
 
-    private Class<T> type;
     private ReadMeta meta;
 
     private QuadFunction<InputStream, PrintStream, PrintStream, ReadMeta, Boolean> before;
@@ -27,18 +26,11 @@ public class ReadTask<T> implements Serializable {
 
     private InputExtractor extractor;
     private InputConverter<?> converter;
+    private ConversionPayload payload;
 
     private BiConsumer<Object, ReadMeta> validator;
     private Consumer<Object> assigner;
     private ErrorPromptFormatter errorPromptFormatter;
-
-    public Class<T> getType() {
-        return type;
-    }
-
-    public void setType(Class<T> type) {
-        this.type = type;
-    }
 
     public ReadMeta getMeta() {
         return meta;
@@ -94,6 +86,14 @@ public class ReadTask<T> implements Serializable {
 
     public void setConverter(InputConverter<?> converter) {
         this.converter = converter;
+    }
+
+    public ConversionPayload getPayload() {
+        return payload;
+    }
+
+    public void setPayload(ConversionPayload payload) {
+        this.payload = payload;
     }
 
     public BiConsumer<Object, ReadMeta> getValidator() {

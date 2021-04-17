@@ -144,7 +144,7 @@ public class ReadEngineTest {
         verify(readPromptFormatter, times(1)).format(any());
         verify(handler, times(1)).read(System.in, System.out, System.err);
         verify(extractor, times(1)).extract(any());
-        verify(converter, times(1)).convert(any());
+        verify(converter, times(1)).convert(any(), any());
         verify(assigner, times(1)).accept(any());
         verify(errorPromptFormatter, times(0)).format(any(), any(), any());
 
@@ -170,7 +170,7 @@ public class ReadEngineTest {
         verify(readPromptFormatter, times(1)).format(any());
         verify(handler, times(1)).read(in, out, out);
         verify(extractor, times(1)).extract(any());
-        verify(converter, times(1)).convert(any());
+        verify(converter, times(1)).convert(any(), any());
         verify(assigner, times(1)).accept(any());
         verify(errorPromptFormatter, times(0)).format(any(), any(), any());
 
@@ -214,7 +214,7 @@ public class ReadEngineTest {
         verify(readPromptFormatter, times(1)).format(any());
         verify(handler, times(1)).read(in, out, err);
         verify(extractor, times(1)).extract(any());
-        verify(converter, times(1)).convert(any());
+        verify(converter, times(1)).convert(any(), any());
         verify(assigner, times(1)).accept(any());
         verify(errorPromptFormatter, times(0)).format(any(), any(), any());
 
@@ -247,7 +247,7 @@ public class ReadEngineTest {
         verify(readPromptFormatter, times(1)).format(any());
         verify(handler, times(1)).read(in, out, err);
         verify(extractor, times(1)).extract(any());
-        verify(converter, times(1)).convert(any());
+        verify(converter, times(1)).convert(any(), any());
         verify(validator, times(0)).accept(any(), any());
         verify(assigner, times(1)).accept(any());
         verify(errorPromptFormatter, times(0)).format(any(), any(), any());
@@ -284,7 +284,7 @@ public class ReadEngineTest {
         verify(readPromptFormatter, times(2)).format(any());
         verify(handler, times(2)).read(in, out, err);
         verify(extractor, times(2)).extract(any());
-        verify(converter, times(2)).convert(any());
+        verify(converter, times(2)).convert(any(), any());
         verify(assigner, times(1)).accept(any());
         verify(validator, times(2)).accept(any(), any());
         verify(errorPromptFormatter, times(1)).format(any(), any(), eq(e));
@@ -321,7 +321,7 @@ public class ReadEngineTest {
         verify(readPromptFormatter, times(2)).format(any());
         verify(handler, times(2)).read(in, out, err);
         verify(extractor, times(2)).extract(any());
-        verify(converter, times(1)).convert(any());
+        verify(converter, times(1)).convert(any(), any());
         verify(assigner, times(1)).accept(any());
         verify(validator, times(1)).accept(any(), any());
         verify(errorPromptFormatter, times(1)).format(any(), any(), any());
@@ -342,7 +342,7 @@ public class ReadEngineTest {
         stubReadTaskCommonMethods();
 
         AnoReadException e = new ConversionException();
-        when(converter.convert(any())).thenThrow(e).thenReturn(null);
+        when(converter.convert(any(), any())).thenThrow(e).thenReturn(null);
         when(readTask.getErrorPromptFormatter()).thenReturn(errorPromptFormatter);
 
         when(before.apply(in, out, err, null)).thenReturn(true);
@@ -358,7 +358,7 @@ public class ReadEngineTest {
         verify(readPromptFormatter, times(2)).format(any());
         verify(handler, times(2)).read(in, out, err);
         verify(extractor, times(2)).extract(any());
-        verify(converter, times(2)).convert(any());
+        verify(converter, times(2)).convert(any(), any());
         verify(assigner, times(1)).accept(any());
         verify(validator, times(1)).accept(any(), any());
         verify(errorPromptFormatter, times(1)).format(any(), any(), any());
@@ -389,7 +389,6 @@ public class ReadEngineTest {
         Person p = new Person();
 
         ReadTask<String> nameTask = new ReadTask<>();
-        nameTask.setType(String.class);
         nameTask.setMeta(new ReadMeta("name", "Enter Name", null));
         nameTask.setBefore(before);
         nameTask.setAfter(after);
@@ -401,7 +400,6 @@ public class ReadEngineTest {
         nameTask.setErrorPromptFormatter(epf);
 
         ReadTask<Integer> ageTask = new ReadTask<>();
-        ageTask.setType(Integer.class);
         ageTask.setMeta(new ReadMeta("age", "Enter Age", null));
         ageTask.setBefore(before);
         ageTask.setAfter(after);

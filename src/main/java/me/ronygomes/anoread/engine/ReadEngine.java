@@ -66,7 +66,7 @@ public class ReadEngine {
                 try {
                     parts = task.getExtractor().extract(line);
 
-                    input = task.getConverter().convert(parts);
+                    input = task.getConverter().convert(parts, task.getPayload());
 
                     if (Objects.nonNull(task.getValidator())) {
                         task.getValidator().accept(input, task.getMeta());
