@@ -30,41 +30,41 @@ public class BasicErrorPromptFormatterTest {
     void testExtractionExceptionWithoutPrompt() {
         AnoReadException e = new ExtractionException(ERROR_DISPLAY_MESSAGE);
         ErrorPromptFormatter ef = new BasicErrorPromptFormatter();
-        assertEquals("emName[input] - Message", ef.format(meta, ERROR_INPUT, e));
+        assertEquals("emName=input => Message" + System.lineSeparator(), ef.format(meta, ERROR_INPUT, e));
     }
 
     @Test
     void testExtractionExceptionWithoutOutPrompt() {
         AnoReadException e = new ExtractionException(ERROR_DISPLAY_MESSAGE);
         ErrorPromptFormatter ef = new BasicErrorPromptFormatter(true);
-        assertEquals("[EXTRACTION] emName[input] - Message", ef.format(meta, ERROR_INPUT, e));
+        assertEquals("[EXTRACTION] emName=input => Message" + System.lineSeparator(), ef.format(meta, ERROR_INPUT, e));
     }
 
     @Test
     void testConversionExceptionWithoutPrompt() {
         AnoReadException e = new ConversionException(ERROR_DISPLAY_MESSAGE);
         ErrorPromptFormatter ef = new BasicErrorPromptFormatter();
-        assertEquals("emName[input] - Message", ef.format(meta, ERROR_INPUT, e));
+        assertEquals("emName=input => Message" + System.lineSeparator(), ef.format(meta, ERROR_INPUT, e));
     }
 
     @Test
     void testConversionExceptionWithoutOutPrompt() {
         AnoReadException e = new ConversionException(ERROR_DISPLAY_MESSAGE);
         ErrorPromptFormatter ef = new BasicErrorPromptFormatter(true);
-        assertEquals("[CONVERSION] emName[input] - Message", ef.format(meta, ERROR_INPUT, e));
+        assertEquals("[CONVERSION] emName=input => Message" + System.lineSeparator(), ef.format(meta, ERROR_INPUT, e));
     }
 
     @Test
     void testValidationErrorWithoutPrompt() {
         AnoReadException e = new ValidationError(ERROR_DISPLAY_MESSAGE);
         ErrorPromptFormatter ef = new BasicErrorPromptFormatter();
-        assertEquals("emName[input] - Message", ef.format(meta, ERROR_INPUT, e));
+        assertEquals("emName=input => Message" + System.lineSeparator(), ef.format(meta, ERROR_INPUT, e));
     }
 
     @Test
     void testValidationErrorWithoutOutPrompt() {
         AnoReadException e = new ValidationError(ERROR_DISPLAY_MESSAGE);
         ErrorPromptFormatter ef = new BasicErrorPromptFormatter(true);
-        assertEquals("[VALIDATION] emName[input] - Message", ef.format(meta, ERROR_INPUT, e));
+        assertEquals("[VALIDATION] emName=input => Message" + System.lineSeparator(), ef.format(meta, ERROR_INPUT, e));
     }
 }

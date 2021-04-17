@@ -34,6 +34,7 @@ public class BasicErrorPromptFormatter implements ErrorPromptFormatter {
             typeMessage += " ";
         }
 
-        return String.format("%s%s[%s] - %s", typeMessage, meta.getName(), input, e.getDisplayMessage());
+        return String.format("%s%s=%s => %s" + System.lineSeparator(),
+                typeMessage, meta.getName(), input, e.getDisplayMessage());
     }
 }
