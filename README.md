@@ -2,6 +2,22 @@
 
 Simplifies talking input from console.
 
+# Usage
+Add `anoread` as project dependencies using following lines:
+
+```groovy
+repositories {
+    maven { 
+        url 'https://jitpack.io' 
+    }
+
+    dependencies {
+        compile 'com.github.ronygomes:anoread:0.3.0'
+    }
+}
+```
+
+# Example
 Suppose want to take input in following class:
 ```java
 public class Person {
@@ -35,7 +51,7 @@ public class Main {
 
 Running `Main` will promt for input. Entering input will automatically bind in `Person`
 ```bash
-$ javac Main
+$ java Main # Omitting classpath details
 Enter name: John
 Enter age: 25
 Enter favouriteLanguage: Java, C++, Go
