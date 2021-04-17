@@ -2,11 +2,14 @@ package me.ronygomes.anoread.context;
 
 import me.ronygomes.anoread.converter.InputConverter;
 import me.ronygomes.anoread.converter.impl.IntegerConverter;
+import me.ronygomes.anoread.converter.impl.ListConverter;
 import me.ronygomes.anoread.converter.impl.StringConverter;
 import me.ronygomes.anoread.extractor.InputExtractor;
+import me.ronygomes.anoread.extractor.impl.DelimiterSeparatedInputExtractor;
 import me.ronygomes.anoread.extractor.impl.SingleInputExtractor;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -19,6 +22,9 @@ public class AnoreadContext {
         CONVERTER.put(int.class, new IntegerConverter());
         CONVERTER.put(Integer.class, new IntegerConverter());
         CONVERTER.put(String.class, new StringConverter());
+        CONVERTER.put(List.class, new ListConverter());
+
+        EXTRACTOR.put(List.class, new DelimiterSeparatedInputExtractor());
     }
 
     public static InputConverter<?> getDefaultConverterByType(Class<?> type) {

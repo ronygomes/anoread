@@ -8,11 +8,11 @@ public class AnoreadContextTest {
 
     @Test
     void testDefaultConverters() {
-        assertEquals(3, AnoreadContext.converterCount());
+        assertEquals(4, AnoreadContext.converterCount());
     }
 
     @Test
     void testDefaultExtractors() {
-        assertEquals(0, AnoreadContext.extractorCount());
+        assertEquals(1, AnoreadContext.extractorCount());
     }
 }
