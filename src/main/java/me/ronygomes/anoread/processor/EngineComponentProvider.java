@@ -24,7 +24,7 @@ public interface EngineComponentProvider {
 
     ErrorPromptFormatter getErrorPromptFormatter();
 
-    default void updateTask(Object target, Field field, ReadTask<?> task) {
+    default void updateTask(Object target, Field field, ReadTask task) {
         task.setHandler(getHandler());
         task.setReadPromptFormatter(getReadPromptFormatter());
         task.setExtractor(getExtractor(field.getType()));

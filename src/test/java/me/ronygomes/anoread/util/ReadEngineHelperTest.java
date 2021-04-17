@@ -53,7 +53,7 @@ public class ReadEngineHelperTest {
 
         EngineComponentProvider cp = mock(EngineComponentProvider.class);
 
-        AnnotatedReadTask<?> task = (AnnotatedReadTask<?>) createAnnotatedReadTask(p, field, holder, meta,
+        AnnotatedReadTask task = (AnnotatedReadTask) createAnnotatedReadTask(p, field, holder, meta,
                 method1, method2, method3, cp);
 
         assertSame(p, task.getTarget());
@@ -95,7 +95,7 @@ public class ReadEngineHelperTest {
         o.reset();
         e.reset();
 
-        AnnotatedReadTask<?> nameTask = (AnnotatedReadTask<?>) cmd.getTasks()
+        AnnotatedReadTask nameTask = (AnnotatedReadTask) cmd.getTasks()
                 .stream()
                 .filter(t -> t.getMeta().getName().equals("name"))
                 .findFirst().orElseThrow(IllegalStateException::new);
@@ -133,7 +133,7 @@ public class ReadEngineHelperTest {
         nameTask.getValidator().accept(p, nameMeta);
         assertEquals("4", nameMeta.getHint());
 
-        AnnotatedReadTask<?> ageTask = (AnnotatedReadTask<?>) cmd.getTasks()
+        AnnotatedReadTask ageTask = (AnnotatedReadTask) cmd.getTasks()
                 .stream()
                 .filter(t -> t.getMeta().getName().equals("age"))
                 .findFirst().orElseThrow(IllegalStateException::new);

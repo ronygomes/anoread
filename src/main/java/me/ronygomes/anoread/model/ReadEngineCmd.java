@@ -11,7 +11,7 @@ public class ReadEngineCmd implements Serializable {
 
     private TriConsumer<InputStream, PrintStream, PrintStream> beginConsumer;
     private TriConsumer<InputStream, PrintStream, PrintStream> endConsumer;
-    private List<ReadTask<?>> tasks;
+    private List<ReadTask> tasks;
 
     public ReadEngineCmd(TriConsumer<InputStream, PrintStream, PrintStream> beginConsumer,
                          TriConsumer<InputStream, PrintStream, PrintStream> endConsumer) {
@@ -22,7 +22,7 @@ public class ReadEngineCmd implements Serializable {
 
     public ReadEngineCmd(TriConsumer<InputStream, PrintStream, PrintStream> beginConsumer,
                          TriConsumer<InputStream, PrintStream, PrintStream> endConsumer,
-                         List<ReadTask<?>> tasks) {
+                         List<ReadTask> tasks) {
 
         this.beginConsumer = beginConsumer;
         this.endConsumer = endConsumer;
@@ -45,11 +45,11 @@ public class ReadEngineCmd implements Serializable {
         this.endConsumer = endConsumer;
     }
 
-    public List<ReadTask<?>> getTasks() {
+    public List<ReadTask> getTasks() {
         return tasks;
     }
 
-    public void setTasks(List<ReadTask<?>> tasks) {
+    public void setTasks(List<ReadTask> tasks) {
         this.tasks = tasks;
     }
 }

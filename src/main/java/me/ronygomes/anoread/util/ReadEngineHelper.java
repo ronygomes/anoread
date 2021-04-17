@@ -23,7 +23,7 @@ public class ReadEngineHelper {
         EngineComponentProvider classLevelEngineComponentProvider =
                 createClassEngineComponentProvider(parentEngineComponentProvider, target.getClass().getAnnotations());
 
-        List<ReadTask<?>> tasks = new ArrayList<>();
+        List<ReadTask> tasks = new ArrayList<>();
 
         Method readEachPre = extractReadEachPre(methods);
         Method readEachPost = extractReadEachPost(methods);
@@ -42,16 +42,16 @@ public class ReadEngineHelper {
         return cmd;
     }
 
-    public static ReadTask<?> createAnnotatedReadTask(Object target,
-                                                      Field field,
-                                                      ReadLifeCycleHookHolder holder,
-                                                      ReadMeta meta,
-                                                      Method readEachPre,
-                                                      Method readEachPost,
-                                                      Method validatorMethod,
-                                                      EngineComponentProvider fieldEngineComponentProvider) {
+    public static ReadTask createAnnotatedReadTask(Object target,
+                                                   Field field,
+                                                   ReadLifeCycleHookHolder holder,
+                                                   ReadMeta meta,
+                                                   Method readEachPre,
+                                                   Method readEachPost,
+                                                   Method validatorMethod,
+                                                   EngineComponentProvider fieldEngineComponentProvider) {
 
-        ReadTask<?> task = new AnnotatedReadTask<>(target, holder, meta, readEachPre, readEachPost, validatorMethod);
+        ReadTask task = new AnnotatedReadTask(target, holder, meta, readEachPre, readEachPost, validatorMethod);
         fieldEngineComponentProvider.updateTask(target, field, task);
         return task;
     }

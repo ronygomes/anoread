@@ -14,7 +14,7 @@ import java.io.Serializable;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public class ReadTask<T> implements Serializable {
+public class ReadTask implements Serializable {
 
     private ReadMeta meta;
 

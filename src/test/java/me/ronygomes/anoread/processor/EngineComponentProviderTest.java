@@ -48,7 +48,7 @@ public class EngineComponentProviderTest {
     @Test
     void testUpdateTaskUpdateReadTaskWithProviderData() throws NoSuchFieldException {
         EngineComponentProvider p = spy(EngineComponentProvider.class);
-        ReadTask<?> task = mock(ReadTask.class);
+        ReadTask task = mock(ReadTask.class);
 
         when(p.getHandler()).thenReturn(handler);
         when(p.getReadPromptFormatter()).thenReturn(readPromptFormatter);
@@ -70,7 +70,7 @@ public class EngineComponentProviderTest {
 
     @Test
     void testUpdateTaskCopiesCorrectly() throws NoSuchFieldException {
-        ReadTask<?> task = new ReadTask<>();
+        ReadTask task = new ReadTask();
         EngineComponentProvider p = DefaultEngineComponentProvider.getInstance();
 
         Person o = new Person();

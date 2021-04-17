@@ -48,7 +48,7 @@ public class ReadEngine {
         Object input;
         boolean doContinue;
 
-        for (ReadTask<?> task : cmd.getTasks()) {
+        for (ReadTask task : cmd.getTasks()) {
 
             if (Objects.nonNull(task.getBefore())) {
                 boolean processThisTask = task.getBefore().apply(in, out, err, task.getMeta());

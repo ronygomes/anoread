@@ -52,7 +52,7 @@ public class ReadEngineTest {
     private ReadEngineCmd engineCmd;
 
     @Mock
-    private ReadTask<?> readTask;
+    private ReadTask readTask;
 
     @Mock
     private TriConsumer<InputStream, PrintStream, PrintStream> beginConsumer;
@@ -88,7 +88,7 @@ public class ReadEngineTest {
     private ErrorPromptFormatter errorPromptFormatter;
 
     @Spy
-    private List<ReadTask<?>> tasks;
+    private List<ReadTask> tasks;
 
     private ByteArrayInputStream in;
 
@@ -388,7 +388,7 @@ public class ReadEngineTest {
 
         Person p = new Person();
 
-        ReadTask<String> nameTask = new ReadTask<>();
+        ReadTask nameTask = new ReadTask();
         nameTask.setMeta(new ReadMeta("name", "Enter Name", null));
         nameTask.setBefore(before);
         nameTask.setAfter(after);
@@ -399,7 +399,7 @@ public class ReadEngineTest {
         nameTask.setAssigner(n -> p.setName((String) n));
         nameTask.setErrorPromptFormatter(epf);
 
-        ReadTask<Integer> ageTask = new ReadTask<>();
+        ReadTask ageTask = new ReadTask();
         ageTask.setMeta(new ReadMeta("age", "Enter Age", null));
         ageTask.setBefore(before);
         ageTask.setAfter(after);
@@ -410,7 +410,7 @@ public class ReadEngineTest {
         ageTask.setAssigner(n -> p.setAge((int) n));
         ageTask.setErrorPromptFormatter(epf);
 
-        List<ReadTask<?>> tasks = new ArrayList<>();
+        List<ReadTask> tasks = new ArrayList<>();
         tasks.add(nameTask);
         tasks.add(ageTask);
 

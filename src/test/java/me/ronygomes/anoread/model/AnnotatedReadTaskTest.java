@@ -27,7 +27,7 @@ public class AnnotatedReadTaskTest {
                 }
         );
 
-        AnnotatedReadTask<?> task = new AnnotatedReadTask<>(target, holder, meta, null, null, null);
+        AnnotatedReadTask task = new AnnotatedReadTask(target, holder, meta, null, null, null);
 
         assertSame(target, task.getTarget());
         assertSame(meta, task.getMeta());
@@ -58,7 +58,7 @@ public class AnnotatedReadTaskTest {
 
         Method method3 = AnnotatedReadTaskTest.class.getDeclaredMethod("method3", Object.class, ReadMeta.class);
 
-        AnnotatedReadTask<?> task = new AnnotatedReadTask<>(target, holder, meta, method1, method2, method3);
+        AnnotatedReadTask task = new AnnotatedReadTask(target, holder, meta, method1, method2, method3);
 
         assertSame(target, task.getTarget());
         assertSame(meta, task.getMeta());
@@ -83,7 +83,7 @@ public class AnnotatedReadTaskTest {
 
         Method method3 = AnnotatedReadTaskTest.class.getDeclaredMethod("method3", Object.class, ReadMeta.class);
 
-        AnnotatedReadTask<?> task = new AnnotatedReadTask<>(target, holder, meta, method1, method2, method3);
+        AnnotatedReadTask task = new AnnotatedReadTask(target, holder, meta, method1, method2, method3);
 
         QuadFunction<InputStream, PrintStream, PrintStream, ReadMeta, Boolean> readEachPre = task.getBefore();
         QuadConsumer<InputStream, PrintStream, PrintStream, ReadMeta> readEachPost = task.getAfter();

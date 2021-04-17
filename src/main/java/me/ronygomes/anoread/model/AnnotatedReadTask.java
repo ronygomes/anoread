@@ -11,7 +11,7 @@ import java.lang.reflect.Modifier;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 
-public class AnnotatedReadTask<T> extends ReadTask<T> {
+public class AnnotatedReadTask extends ReadTask {
 
     private Object target;
 
