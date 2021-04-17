@@ -1,66 +1,66 @@
-# `anoread` - Java Annotated Reader
+# anoread - Java Annotated Reader
 
-## Introduction
 Simplifies talking input from console.
 
-! Better design is like JSR 303. Each class need to have these properties
-@ReadMetaData: Can be applied to field.
-    - prompt: Message to be printed in System.in. Support JRS 303 style message key with {}
-    - group: default empty, can specify multiple group
-    - order: default -1, specify order of scan
-    - noPrompt: default false
-
-@ReadOrder: Can be applied to class(!) or method. If applied to method, expected to return Collection<String> or String[]
-            Method parameter can have List<Group>
-    - values:
-
-@ReadPre, @ReadPost: Can be applied to method. Can inject System.in, System.out, PropertyReader
-                     Also has support for injecting custom Object using predefined interfacd
-
-@ReadInit, @ReadEnd: Welcome Message and Finish Message
-
-ReadManager: Class like PersistantManager
+Suppose want to take input in following class:
 ```java
-ReadManager.process(Person.class, System.in, System.out, Collection<String>|String[] order)
-?? ReadManager.registerArgument(Test.class, new Test()); // Now can inejct Test in @ScanPre, @ScanPost
+public class Person {
+    private String name;
+    private int age;
+    private List<String> favouriteLanguage;
+
+    // getter and setter
+    
+    @Override
+    public String toString() {
+        return "Person{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                ", favouriteLanguage=" + favouriteLanguage +
+                '}';
+    }
+}
 ```
 
-@ReadHandler: Can specify custom processor. Each processor need to implement ReadHandler? interface
-    - value
+With `Anoread`, you just have to call a single method.
+```java
+public class Main {
+    public static void main(String[] args) {
+        Person p = Anoread.readAndGet(Person.class, "name", "age", "favouriteLanguage")
 
-@ReadSkip: Ignores an Field
+        System.out.println(p);
+    }
+}
+```
 
-@ReadGroup - Method level annotation. If given to a method will execute for each method argument
-    - name: default will take method name
-    - prompt: Message to be printed in System.in. Support JRS 303 style message key with {}
-    - group: default empty, can specify multiple group
-    - order: default -1, specify order of scan
-    - skipPrompt
+Running `Main` will promt for input. Entering input will automatically bind in `Person`
+```bash
+$ javac Main
+Enter name: John
+Enter age: 25
+Enter favouriteLanguage: Java, C++, Go
 
-Read order can be provided in various way. Following is the priority
-    1. ReadManager method argument
-    2. @ReadOrder in method
-    3. @ReadOrder in class
-    4. order @ReadMetaData
-If can not determine order will through exception
+Person{name='John', age=25, favouriteLanguage=[Java, C++, Go]}
+```
 
-When @Scan annotation is given,
-    - First search for @ScanProcessor
-    - Then Search for annotation, annotated with @ScanProcessor
-    - Then will try to predict
-Throw exception if not processor found
+Prompt text can be modified with `@ReadAttributes` annotation:
 
-@ScanDelimiter - Will provide a way to supply delimiter to underlying Scanner. Class level annotation
+```java
+@ReadAttributes(prompt = "Enter First Name")
+private String name;
+```
 
-Will have annotation for all default scan type
-@ScanInt
-@ScanLong
-@ScanLine
+Data can be validated using `@Validator` anotation on following method signature. This method will be called for each input:
 
-Some predefined custom processor
-! Need to think a way to pass custom processor data to ScanProcessor interface
-@ScanMultiLine - Will take input empty line is not given
-@ScanFixedLine - Will input n lines
-@ScanDate - Input directly to date object
-    - format
-
+```java 
+@Validator
+void validate(Object value, ReadMeta meta) {
+    switch (meta.getName()) {
+        // Validate only `age' field
+        case "age":
+            if (((int) value) > 100) {
+                throw new ValidationError("Age can not be greater than 100");
+            }
+    }
+}
+```
