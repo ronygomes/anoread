@@ -20,22 +20,13 @@ public class Anoread {
 
     private static final ReadEngine DEFAULT_ENGINE = new ReadEngine();
 
-    public static void read(ReadEngine engine, Object target,
-                            ReadLifeCycleHookHolder holder,
-                            EngineComponentProvider defaultEngineComponentProvider,
-                            String... fieldNames) {
-
-        Objects.requireNonNull(target);
-        Objects.requireNonNull(holder);
+    private static void read(ReadEngine engine, Object target,
+                             ReadLifeCycleHookHolder holder,
+                             EngineComponentProvider defaultEngineComponentProvider,
+                             String... fieldNames) {
 
         List<Field> fields = getFields(target.getClass(), Arrays.asList(fieldNames));
-        ReadEngineCmd engineCmd = make(target, fields, holder, defaultEngineComponentProvider);
-
-        try {
-            engine.execute(engineCmd);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        read(engine, target, holder, defaultEngineComponentProvider, fields);
     }
 
     public static void read(Object target, String... fields) {
@@ -50,21 +41,41 @@ public class Anoread {
             T target = clazz.newInstance();
 
             List<Field> fields = getOrderedReadFields(clazz.getDeclaredFields());
-            ReadEngineCmd engineCmd = make(target, fields, holder, defaultEngineComponentProvider);
-
-            engine.execute(engineCmd);
+            read(engine, target, holder, defaultEngineComponentProvider, fields);
 
             return target;
 
-        } catch (InstantiationException | IllegalAccessException | IOException e) {
+        } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
 
         throw new IllegalStateException("Unable to read class of type: " + clazz.getTypeName());
     }
 
+    public static <T> T readAndGet(Class<T> clazz, String... fields) {
+        return readAndGet(DEFAULT_ENGINE, clazz, new ReadLifeCycleHookHolder(),
+                DefaultEngineComponentProvider.getInstance());
+    }
+
     public static <T> T readAndGet(Class<T> clazz) {
         return readAndGet(DEFAULT_ENGINE, clazz, new ReadLifeCycleHookHolder(),
                 DefaultEngineComponentProvider.getInstance());
+    }
+
+    private static void read(ReadEngine engine, Object target,
+                             ReadLifeCycleHookHolder holder,
+                             EngineComponentProvider defaultEngineComponentProvider,
+                             List<Field> fields) {
+
+        Objects.requireNonNull(target);
+        Objects.requireNonNull(holder);
+
+        ReadEngineCmd engineCmd = make(target, fields, holder, defaultEngineComponentProvider);
+
+        try {
+            engine.execute(engineCmd);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
