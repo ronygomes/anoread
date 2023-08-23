@@ -44,3 +44,14 @@ String method(ReadMeta meta, String other) {
 [ ] Add CI/CD tool
 [ ] Add Java Doc and Author Info
 [ ] Add jar as GitHub Artifact
+
+[ ] Write a DSL to read without annotation
+```java
+Anoread.from(Person.class)
+.showPromt("Enter name :")
+.for(Person::setName)
+.and()
+.showPrompt("Enter age :")
+.for(Person::setAge)
+.read();
+```
