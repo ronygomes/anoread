@@ -48,10 +48,12 @@ String method(ReadMeta meta, String other) {
 [ ] Write a DSL to read without annotation
 ```java
 Anoread.from(Person.class)
-.showPromt("Enter name :")
+.showPrompt("Enter name :")
 .for(Person::setName)
 .and()
 .showPrompt("Enter age :")
 .for(Person::setAge)
 .read();
 ```
+
+[ ] Add Unit Test for `Anoread.java`
